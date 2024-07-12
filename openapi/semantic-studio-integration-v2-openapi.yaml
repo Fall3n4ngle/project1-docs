@@ -1,0 +1,866 @@
+openapi: 3.0.0
+x-stoplight:
+  id: gk6nmh2xm4crk
+info:
+  title: Semantic Studio Api
+  version: '1.0'
+servers:
+  - url: 'http://localhost:4444'
+    description: Local search api
+  - url: 'http://localhost:8585'
+    description: Local cockpit api
+  - url: 'https://dev-api-v3.semknox.com/v2'
+    description: Dev api for search and cockpit
+security: 
+  - JWT: []
+paths:
+  /catalogs:
+    get:
+      summary: GET catalogs
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  projects:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/project'
+      operationId: get-catalogs
+      description: Returns all available catalogs of an organisation (determined by token). The catalogs are attached to projects. Projects define the language. This is the only endpoint in catalogs that should go agains the cockpit since project id is not in context.
+  '/catalogs/data-searches':
+    post:
+      summary: POST a data search
+      operationId: post-catalogs-search
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dataSearch'
+      x-internal: true
+      description: Stores a data search object and returns the object with assigned ID. The ID can then be used to obtain available attributes and products.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/dataSearch'
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: projectId
+  '/catalogs/data-searches/{data-search}':
+    parameters:
+      - schema:
+          type: number
+        name: data-search
+        in: path
+        required: true
+    get:
+      summary: GET a data search
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/dataSearch'
+      operationId: get-catalogs-data-search
+      description: Returns the data search of the given data search ID
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: projectId
+  '/catalogs/{catalogId}/data-searches/{data-search}/products':
+    get:
+      summary: GET products
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/products'
+      operationId: get-catalogs-search-products
+      description: Returns the products of the given data saerch
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: projectId
+    parameters:
+      - schema:
+          type: string
+        name: catalogId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: data-search
+        in: path
+        required: true
+  '/catalogs/{catalogId}/data-searches/{dataSearchId}/attributes':
+    get:
+      summary: GET available attributes
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/attributes'
+      operationId: get-catalogs-search-attributes
+      description: Returns the available attributes for a given data search. The information of the attributes can be used to obtain available values of an attribute or to define filters in a data search object
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: projectId
+          required: true
+    parameters:
+      - schema:
+          type: integer
+        name: dataSearchId
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: catalogId
+        in: path
+        required: true
+  '/catalogs/{catalogid}/data-searches/{dataSearchId}/attributes/{attributeId}/values':
+    get:
+      summary: GET values of an attribute
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/values'
+      operationId: get-catalogs-search-attributes-values
+      description: returns the available values of an attribute defined by attributeId. The returned values are restricted by the given dataSearchId
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: projectId
+    parameters:
+      - schema:
+          type: integer
+        name: dataSearchId
+        in: path
+        required: true
+      - schema:
+          type: integer
+        name: attributeId
+        in: path
+        required: true
+      - schema:
+          type: integer
+        name: catalogid
+        in: path
+        required: true
+  '/catalogs/{catalogId}/intents':
+    parameters:
+      - schema:
+          type: integer
+        name: catalogId
+        in: path
+        required: true
+    post:
+      summary: POST an intent
+      operationId: post-intents
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/intent'
+      description: Endpoint to store an intent in Semantic Studio
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: projectId
+  '/catalogs/intents/{intentId}':
+    parameters:
+      - schema:
+          type: string
+        name: intentId
+        in: path
+        required: true
+    get:
+      summary: GET an intent by id
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/intent'
+      operationId: get-intent-intentId
+      description: Endpoint to get an intent by id
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: projectId
+  '/catalogs/{catalogId}/intents/{intentId}/index':
+    parameters:
+      - schema:
+          type: integer
+        name: catalogId
+        in: path
+        required: true
+      - schema:
+          type: integer
+        name: intentId
+        in: path
+        required: true
+    get:
+      summary: Trigger the index process for an intent
+      tags: []
+      responses: {}
+      operationId: get-catalogs-search-index-intentId
+      description: Triggers indexing of an answer. Does the on the fly indexing in the search module and triggers an update via update service
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: projectId
+components:
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    dataSearch:
+      type: object
+      x-examples: {}
+      properties:
+        _id:
+          type: integer
+          description: |
+            NULL or undefined. Id is set by backend
+        projectId:
+          type: integer
+          description: NULL or undefined. ProjectId is set by backend
+        valueSearch:
+          type: object
+          properties:
+            queries:
+              type: array
+              items:
+                type: object
+                properties:
+                  dataSearchField:
+                    type: string
+                    enum:
+                      - ATTRIBUTE
+                      - VALUE
+                      - ANYTHING
+                  dataSearchType:
+                    type: string
+                    enum:
+                      - MATCHES
+                      - MATCHES_NOT
+                      - CONTAINS
+                      - CONTAINS_NOT
+                  dataSearchValues:
+                    type: array
+                    items:
+                      type: string
+                required:
+                  - dataSearchField
+                  - dataSearchType
+                  - dataSearchValues
+        productSearch:
+          type: object
+          properties:
+            query:
+              type: string
+              nullable: true
+            productFilters:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  id:
+                    type: integer
+                    description: The ID of the concept representing the filter. The concept ids can be obtained from the attributes response
+                  type:
+                    type: string
+                    enum:
+                      - NUMERIC_ATTRIBUTE
+                      - BOOLEAN_ATTRIBUTE
+                      - TEXT_ATTRIBUTE
+                      - DATE_ATTRIBUTE
+                  values:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        id:
+                          type: integer
+                        type:
+                          type: string
+                  relationType:
+                    type: string
+                    enum:
+                      - IS
+                      - IS_NOT
+                      - EXIST
+                      - EXISTS_NOT
+                  max:
+                    type: number
+                  min:
+                    type: number
+                required:
+                  - id
+            pagination:
+              type: object
+              properties:
+                sortBy:
+                  type: string
+                  nullable: true
+                descending:
+                  type: boolean
+                page:
+                  type: integer
+                rowsPerPage:
+                  type: integer
+                rowsNumber:
+                  type: integer
+            ranking:
+              type: object
+              nullable: true
+              properties:
+                type:
+                  type: string
+    attributes:
+      type: object
+      x-examples: {}
+      description: ''
+      properties:
+        attributes:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                nullable: true
+                description: The id of the filter attribute. Needed to define filters in a data search object or to request available values for TEXT_ATTRIBUTE
+              name:
+                type: string
+                description: The name of the attribute dependant on the language of the project
+              idName:
+                type: string
+                nullable: true
+                description: |
+                  The internal string identifier
+              count:
+                type: integer
+                description: Number of occurences of the attribute. The count is dependant on the current data search
+              conceptType:
+                $ref: '#/components/schemas/conceptType'
+                nullable: true
+              origin:
+                type: string
+                enum:
+                  - INTENT
+                  - CATALOG
+                  - ANSWER
+                  - CLASSIFIER
+                  - ZOOVU_ONTOLOGY
+                  - MANUALLY_CREATED
+                  - AUTOMATICALLY_CREATED
+              min:
+                type: number
+              max:
+                type: number
+              conceptMetaData:
+                type: object
+                properties:
+                  maintenanceStatus:
+                    type: string
+                  disabled:
+                    type: boolean
+                  appendix:
+                    type: string
+                    nullable: true
+                  custom:
+                    type: boolean
+                  hide:
+                    type: boolean
+                  ignore:
+                    type: boolean
+                  correspondingSemknoxConcept:
+                    type: string
+                    nullable: true
+                  modified:
+                    type: boolean
+                  hasKeySentences:
+                    type: boolean
+                  semanticNeed:
+                    type: integer
+                  blocked:
+                    type: boolean
+                  valueLengthLimit:
+                    type: integer
+                  attributeValuePairs:
+                    type: object
+                  append:
+                    type: boolean
+                  zoovuConceptIdentifier:
+                    type: string
+                    nullable: true
+    conceptType:
+      title: ConceptType
+      x-stoplight:
+        id: vradzeugs1rd6
+      type: string
+      nullable: true
+      enum:
+        - TEXT_ATTRIBUTE
+        - NUMERIC_ATTRIBUTE
+        - BOOLEAN_ATTRIBUTE
+        - DATE_ATTRIBUTE
+        - TREE_ATTRIBUTE
+        - UNTYPED_ATTRIBUTE
+    values:
+      type: object
+      properties: 
+        values:
+          type: array
+          items: 
+            type: object
+            $ref: "#/components/schemas/value"
+    value: 
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+        count:
+          type: integer
+        id:
+          type: integer
+        conceptMetaData:
+          type: object
+          properties:
+            maintenanceStatus:
+              type: string
+            disabled:
+              type: boolean
+            appendix:
+              type: 'null'
+            custom:
+              type: boolean
+            hide:
+              type: boolean
+            ignore:
+              type: boolean
+            correspondingSemknoxConcept:
+              type: 'string'
+              nullable: true
+            modified:
+              type: boolean
+            hasKeySentences:
+              type: boolean
+            semanticNeed:
+              type: integer
+            blocked:
+              type: boolean
+            valueLengthLimit:
+              type: integer
+            attributeValuePairs:
+              type: object
+              properties: {}
+            append:
+              type: boolean
+            zoovuConceptIdentifier:
+              type: 'null'
+        origin:
+          type: string
+        timestamp:
+          type: object
+          properties:
+            time:
+              type: integer
+            timeString:
+              type: string
+    products:
+      type: object
+      properties: 
+        products:
+          type: array
+          items: 
+            type: object
+            $ref: "#/components/schemas/product"
+    product:
+      type: object
+      properties:
+        _id:
+          type: integer
+        projectId:
+          type: integer
+        identifier:
+          type: string
+        articleNumbers:
+          type: array
+          items:
+            type: object
+            properties: {}
+        groupIdentifier:
+          type: 'null'
+        name:
+          type: string
+        productUrl:
+          type: string
+        categoryConfidence:
+          type: integer
+        settings:
+          type: object
+          properties:
+            includeUserGroups:
+              type: array
+              items:
+                type: object
+                properties: {}
+            excludeUserGroups:
+              type: array
+              items:
+                type: object
+                properties: {}
+            featured:
+              type: boolean
+            appendOnly:
+                type: boolean
+            master:
+              type: boolean
+        images:
+          type: array
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+              type:
+                type: string
+        dataPoints:
+          type: array
+          items:
+            type: object
+            properties: 
+              id:
+                type: number
+              key:
+                type: string
+              type:
+                type: string
+                enum: 
+                  - "PASS_ON"
+              value:
+                type: string
+              parsedValue:
+                type: number
+                nullable: true
+              values:
+                type: array
+                nullable: true
+                items: 
+                  type: string
+              isCategory:
+                type: boolean
+                nullable: true
+              forCatalogs:
+                type: boolean     
+        sxLeafCategoryConcept:
+          type: object
+          properties:
+            _id:
+              type: integer
+            projectId:
+              type: integer
+            name:
+              type: string
+            type:
+              type: string
+            image:
+              type: 'null'
+            children:
+              type: array
+            items:
+              type: integer
+            parents:
+              type: array
+              items:
+                type: integer
+            settings:
+              type: array
+              items:
+                type: string
+            languageData:
+              type: object
+              properties:
+                en:
+                  type: object
+                  properties:
+                    booleanNames:
+                      type: object
+                      properties:
+                        positive:
+                          type: string
+                        negative:
+                          type: string
+                    viewUnit:
+                      type: 'null'
+                    format:
+                      type: object
+                      properties:
+                        auto:
+                          type: boolean
+                        fractionalDigits:
+                          type: integer
+                    viewName:
+                      type: string
+                de:
+                  type: object
+                  properties:
+                    booleanNames:
+                      type: object
+                      properties:
+                        positive:
+                          type: string
+                        negative:
+                          type: string
+                    viewUnit:
+                      type: 'null'
+                    format:
+                      type: object
+                      properties:
+                        auto:
+                          type: boolean
+                        fractionalDigits:
+                          type: integer
+                    viewName:
+                      type: string
+            searchSettings:
+              type: object
+              properties:
+                passOn:
+                  type: boolean
+                passOnSuggestion:
+                  type: boolean
+                description:
+                  type: boolean
+                articleNumber:
+                  type: boolean
+                title:
+                  type: boolean
+                color:
+                  type: 'null'
+                splitSynonyms:
+                  type: boolean
+                ignoreInSimilarityComparison:
+                  type: boolean
+                newPrice:
+                  type: boolean
+                oldPrice:
+                  type: boolean
+            importance:
+              type: integer
+            metaData:
+              type: object
+              properties:
+                maintenanceStatus:
+                  type: string
+                disabled:
+                  type: boolean
+                appendix:
+                  type: 'null'
+                custom:
+                  type: boolean
+                hide:
+                  type: boolean
+                ignore:
+                  type: boolean
+                correspondingSemknoxConcept:
+                  type: 'null'
+                modified:
+                  type: boolean
+                hasKeySentences:
+                  type: boolean
+                semanticNeed:
+                  type: integer
+                blocked:
+                  type: boolean
+                valueLengthLimit:
+                  type: integer
+                attributeValuePairs:
+                  type: object
+                  properties: {}
+                append:
+                  type: boolean
+                zoovuConceptIdentifier:
+                  type: 'null'
+            count:
+              type: integer
+            globalCount:
+              type: integer
+            timestamp:
+              type: object
+              properties:
+                time:
+                  type: integer
+                timeString:
+                  type: string
+            matchExpressions:
+              type: array
+              items:
+                type: object
+                properties: {}
+            categoryDependency:
+              type: object
+              properties:
+                categories:
+                  type: array
+                  items:
+                    type: object
+                    properties: {}
+                categoryDependencyType:
+                  type: string
+                categoryNames:
+                  type: array
+                  items:
+                    type: object
+                    properties: {}
+            origin:
+              type: string
+      x-examples: {}
+    project:
+      title: Project
+      type: object
+      description: |
+        A project groups catalogs coming from the same datafeed.
+      properties:
+        id:
+          type: string
+          example: appliances-2021
+          description: 'Unique identifier for the project, MUST be constant.'
+        name:
+          type: string
+          example: Appliances 2021
+          description: 'Human readable name for the project, used for display in the UI'
+        entries:
+          type: integer
+          example: 7980
+          description: Total number of entries in the whole project
+        catalogs:
+          type: array
+          items:
+            $ref: '#/components/schemas/catalog'
+    catalog:
+      title: Catalog
+      type: object
+      description: |
+        A catalog contains the information to identify a catalog as a user (name) and as a system (id), it contains some key dates and allows for additional information by passing them as labels.
+        A catalog is a subset of the entries in a project
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          example: best-products-v3
+          description: |
+            The *id* will be used as a CONSTANT reference to this catalog. It is also used in the URLs to construct the endpoints (search, describe, features) if they are not added explicitly.
+        name:
+          type: string
+          example: Best Products v3
+          description: |
+            *name* is used in the UI, it is only used for displaying so it SHOULD NOT be constant.
+        entries:
+          type: integer
+          example: 7980
+          description: |
+            Total number of entries in the catalog, the sum of the entries in the catalogs isn't necessarly equal to the sum of the entries in the project. There can be overlop or items that are not in any  of the catalogs.
+        apiKey:
+          type: string
+          example: 355623e7-7f22-4272-990f-23645e729578
+          description: |
+            *apiKey* is used to authorize subsequent calls on catalog level.
+        created:
+          type: string
+          format: date-time
+          description: The date of creation of the catalog.
+        modified:
+          type: string
+          format: date-time
+          description: The data of the last modifications to the catalog.
+        locale:
+          type: string
+          format: '<language code>[_<country code>[_<variant code>]]'
+          description: Defines the intended language and region for the catalog
+          example: en_IE
+        categories:
+          description: |
+            List of categories this belongs to, categories can be a type of products, content, ... Zoovu maintains a list of blueprints for different categories. When there is a match, it will be used to present relevant content.
+          type: array
+          items:
+            type: string
+          example:
+            - HOME_APPLIANCES
+            - MICROWAVES
+        labels:
+          type: array
+          description: |
+            Labels are meta-data, they can be used to identify departments, categories, .... These are customer specific datapoints that don't have an effect in the Zoovu tooling.
+          items:
+            type: string
+          example:
+            - Sweden
+            - Gifts
+            - Season2022
+    intent:
+      title: intent
+      x-stoplight:
+        id: zpgfehrezfyur
+      type: object
+      properties:
+        _id:
+          type: integer
+          description: always set by backend
+        conceptId:
+          type: integer
+          description: always set by backend
+        dataSearchId:
+          type: integer
+        projectId:
+          type: integer
+        catalogId:
+            type: integer
+        name:
+            type: string
+            example: "my answer intent"

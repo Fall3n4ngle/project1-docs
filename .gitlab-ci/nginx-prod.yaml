@@ -1,0 +1,45 @@
+# helm upgrade nexus-proxy bitnami/nginx -n nexus --version 13.2.32 -f orca/devops/nexus/helm/05-nexus.smartassistant.com.yaml --atomic
+
+commonLabels:
+  service: nginx
+  environment: development
+  environment2: partner-docs
+  team: architects
+
+global:
+  imageRegistry: docker-proxy.zoovu.io
+  imagePullSecrets:
+    - regsecret
+
+podAnnotations:
+  log.config.scalyr.com/attributes.parser: accessLog
+
+replicaCount: 2
+
+pdb:
+  create: true
+  minAvailable: 1
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 100m
+    memory: 128Mi
+
+service:
+  type: ClusterIP
+
+ingress:
+  enabled: true
+  hostname: docs.zoovu.com
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-http01-nginx
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: basic-auth-secret
+    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required - partner-docs'
+  ingressClassName: nginx
+  tls: true
+
+staticSitePVC: STATIC_SITE_PVC_NAME

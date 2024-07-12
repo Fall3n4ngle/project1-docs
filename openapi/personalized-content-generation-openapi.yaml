@@ -1,0 +1,225 @@
+openapi: 3.0.0
+servers:
+  - description: AI Content Generator
+    url: https://prod-eu-ai-content-generator.azurewebsites.net/api
+info:
+  description: OpenAI based content generation endpoint to augment PDP with Zoovu generated product knowledge
+  version: "1.0.0"
+  title: Personalized PDP Content API
+  contact:
+    email: s.hollerer@zoovu.com
+  license:
+    name: Private
+    url: 'https://www.zoovu.com'
+tags:
+  - name: personalizedContent
+    description: API that are used to generate personalized product descriptions
+    x-displayName: Personalized content
+paths:
+  /summary-generation:
+    post:
+      security: 
+        -  ApiKeyAuth: []
+      tags:
+        - personalizedContent
+      summary: Product summary
+      operationId: summaryGeneration
+      description: Generates the summary of a product based on preferences of the user gathered during the visit or provided by the hosting website
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SummaryRequest'
+        description: Description of product, persona and preferences
+      responses:
+        '200':
+          description: Generated summary of the product keeping the persona in mind
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SummaryResponse'
+        '400':
+          description: Bad input
+  /attributes-text-generation: 
+    post:
+      security: 
+        -  ApiKeyAuth: []
+      tags:
+        - personalizedContent
+      summary: Attribute descriptions
+      operationId: attributesTextGeneration
+      description: Creates descriptions of attribute values based on the persona
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttributesDescriptionRequest'
+        description: Audit item to add
+      responses:
+        '200':
+          description: Generated summary of the product keeping the persona in mind
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AttributesDescriptionResponse'
+        '400':
+          description: Bad input
+components:
+  securitySchemes: 
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name:  x-functions-key
+  schemas:
+    Visitor:
+      type: object
+      description: |
+        A view on the consumer using the site. 
+        This *could* contain Zoovu data and customer data.
+      required: 
+        - context
+        - profile
+      properties: 
+        context:
+          type: object
+          description: Data gathered using the Zoovu assistants and SDK
+          example: 
+            preferredColor: yellow
+            professional: false
+            anonymous: false
+        profile:
+          type: object
+          description: Data gathered using the site (customer provided data).
+          example: 
+            timeSpent: 1200
+            memberSince: 2020-12-03
+            name: James
+    ProductDescription:
+      type: object
+      required: 
+        - name
+        - sku
+        - category
+      properties:
+        name:
+          type: string
+          example: Asus Nitro 15x3
+          description: Name to be used in the description, ideally, this is the short format name of the product.
+        sku: 
+          type: string
+          example: ASN730nh340r7  
+          description: Identifier of the product as known in the customer system and the Zoovu system.
+        category:
+          type: string
+          example: laptop
+          description: Customer provided category, singular form. Will be hardened in the future.       
+    SummaryRequest:
+      type: object
+      required:
+        - language
+        - product
+        - visitor
+        - attributes
+      properties:
+        language:
+          type: string
+          example: en
+          description: Only language for now, locale in a future implementation.
+        product:
+          type: object
+          $ref: '#/components/schemas/ProductDescription'
+        visitor:
+          type: object
+          $ref: "#/components/schemas/Visitor"
+        attributes:
+          type: array
+          description: List of attribute values that can be used in creating the summary.
+          $ref: '#/components/schemas/AttributeValue'
+    SummaryResponse:
+      type: object
+      required: 
+        -  summary
+      properties: 
+        summary:
+          type: string
+          description: Personalized description of the product based on the visitor's preferences and knowledge.
+    AttributesDescriptionRequest:
+      type: object
+      required:
+        - language 
+        - product
+        - visitor
+        - attributes
+      properties: 
+        language:
+          type: string
+          example: en
+          description: Only language for now, locale in a future implementation.
+        product:
+          type: object
+          $ref: '#/components/schemas/ProductDescription'
+        visitor:
+          type: object
+          $ref: "#/components/schemas/Visitor"
+        attributes:
+          type: array
+          description: List of attribute values that should be described.
+          $ref: '#/components/schemas/AttributeValue'
+    AttributeValue:
+            type: object
+            required: 
+              - elementId
+              - name
+              - value
+            properties: 
+              elementId:
+                type: string
+                description: Do we need this? Identifier of the HTML element that should be targetted
+                example: ui123
+              name:
+                type: string
+                description: Name of the property
+                example: "Operating system"
+              value:
+                type: string
+                description: String representation of the value of the attribute
+                example: "Windows 11 Home"
+    AttributeDescription:
+      type: object
+      required: 
+        - elementId
+        - name
+        - value
+        - description
+      properties: 
+        elementId:
+          type: string
+          description: Do we need this? Identifier of the HTML element that should be targetted
+          example: ui123
+        name:
+          type: string
+          description: Name of the property
+          example: "Operating system"
+        value:
+          type: string
+          description: String representation of the value of the attribute
+          example: "Windows 11 Home"
+        description:
+          type: string
+          description: Personlized description of what this specific attribute means for the user
+          example: Best operating system for home and productivity use
+    AttributesDescriptionResponse:
+      type: object
+      required: 
+        -  descriptions
+      properties: 
+        descriptions:
+          type: array
+          description: list of descriptions of the attributes
+          items: 
+            $ref: "#/components/schemas/AttributeDescription"
+    

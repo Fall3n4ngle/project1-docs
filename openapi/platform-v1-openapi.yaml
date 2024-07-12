@@ -1,0 +1,1936 @@
+openapi: 3.0.0
+x-stoplight:
+  id: 1qjjgdpjuuez5
+info:
+  description: |
+    The Platform API is used to update product data, retrieve product information as well as searching products and finding related products. 
+    
+    
+    ### Authentication 
+    
+    Some endpoints like the search endpoints are public and do not require authentication. Other endpoints like the update endpoints require authentication. Authentication is handled via an API Key in the authorization-header of your request. You can also secure the public endpoints with an Api-Key. Please make sure however that your personal key is never visible to others, e.g. within a browser inspector view.
+    In order to make sure that your key is not visible to others, you should proxy all requests through your own backend. In order to protect all endpoints please contact help@zoovu.com
+    
+    ### Projects
+    
+    All endpoints require a projectId. The project identifies the data source that should be used for your request. If you are using the projectId of a german data source, the results will be returned in german. In order to find the correct projectId needed for your context you can use [/platform/v1/projects](https://docs.zoovu.com/api/platform/get-all-projects) that allows you to retrieve all projects by tags. You can configure your project tags in the [Zoovu Platform](https://semantic-studio.zoovu.com/projects)
+
+  title: Platform API
+  version: "1.0"
+  license:
+    name: Zoovu
+    url: https://zoovu.com
+
+servers:
+  - url: "https://orca-partner.zoovu.com"
+  - url: "https://barracuda-partner.zoovu.com"
+tags:
+  - name: search
+    description: Search and product detail related endpoints
+  - name: data-management
+    description: Data management related endpoints
+paths:
+  "/platform/v1/{project-id}/products/{product-id}":
+    parameters:
+      - schema:
+          type: integer
+        name: project-id
+        in: path
+        required: true
+        example: 123456
+      - schema:
+          type: string
+        name: product-id
+        example: IRB-50920
+        in: path
+        required: true
+    get:
+      summary: Get product detail information
+      security: []
+      tags: [search]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                Example 1:
+                  value:
+                    status: failure
+                    code: 401
+                    message: You are not allowed to access the requested resource
+        "404":
+          description: Not Found
+      operationId: get-v1-platform-project-id-products-product-identifier
+      x-stoplight:
+        id: a614s78bdysc1
+      description: |
+        Returns detailed product information. The product is identified by your internally used *identifier*.
+        This corresponds to the *identifier* field in the product search results.
+  "/platform/v1/{projectId}/relations/resolved-relations":
+    parameters:
+      - schema:
+          type: integer
+        name: projectId
+        in: path
+        required: true
+    get:
+      summary: Get resolved relations
+      security: []
+      tags: [search]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tags:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        tag:
+                          type: string
+                        relations:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                              id:
+                                type: integer
+                              searchResult:
+                                type: array
+                                x-stoplight:
+                                  id: hwdjgr93t2wt2
+                                items:
+                                  $ref: "#/components/schemas/SearchResult"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                status: failure
+                code: 404
+                message: Your requested product was not found
+      operationId: get-v1-platform-project-id-products-product-identifier-related-products
+      x-stoplight:
+        id: dlbpkpghfvqqp
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: product-id
+          description: The unique identifier of the product how it was defined by the client
+        - schema:
+            type: string
+          in: query
+          name: user-group
+          description: restrict the related products by a user group
+        - schema:
+            type: string
+          in: query
+          name: include-relations
+          description: 'define the relations to resolve by a list of relations ids together with a defined limit, e.g. [\{"id":6548, "limit":5\}, \{"id":9878, "limit":5\}]'
+        - schema:
+            type: string
+          in: query
+          name: include-tags
+          description: define the relations to resolve by a list of tag objects
+      description: Resolves a relation for a certain product given by product identifier. Returns the related products.
+  "/search/v1/{project-id}":
+    parameters:
+      - schema:
+          type: integer
+        name: project-id
+        in: path
+        required: true
+    get:
+      summary: Basic product search
+      security: []
+      tags: [search]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    searchResults:
+                      - type: products
+                        name: Produkte
+                        totalResults: 256
+                        totalResultsVariants: 256
+                        results:
+                          - identifier: "10014316"
+                            groupId: "10014316"
+                            sxId: 2126522
+                            sxCategoryId: GUITALELE
+                            dataPoints:
+                              - id: 4087314
+                                key: Brand Image
+                                type: PASS_ON
+                                value: "https://media.justmusic.de/shop/images/hersteller/Yamaha.jpg"
+                              - id: 3346233
+                                key: Preis
+                                type: PASS_ON
+                                value: 99.00 €
+                                parsedValue: 99
+                              - id: 4087309
+                                key: Availability
+                                type: PASS_ON
+                                value: sofort verfügbar - Lieferzeit 1-3 Werktage
+                              - id: 4183437
+                                key: Short Description
+                                type: PASS_ON
+                                value: Guitarlele
+                              - id: 4009067
+                                key: Brand
+                                type: PASS_ON
+                                value: YAMAHA
+                              - id: 4087311
+                                key: ArticleID
+                                type: PASS_ON
+                                value: "16434"
+                              - id: 4251804
+                                key: Availability
+                                type: PASS_ON
+                                value: wenig verfügbar - Lieferzeit 1-3 Werktage
+                            image: //media.justmusic.de/Artikelbilder/Shopsystem/1000px_V2/9117721_1.jpg
+                            name: "Yamaha GL 1 BL, Black"
+                            images:
+                              - type: ALTERNATIVE
+                                url: //media.justmusic.de/Artikelbilder/Shopsystem/1000px_V2/9117721_1.jpg
+                            link: //www.justmusic.de/Gitarre-Bass/Ukulelen/Sonstige-Ukulelen-Guitarlelen/Yamaha-GL-1-BL-Black
+                            resultSet: null
+                            head: true
+                            relevance: 1000000
+                          - identifier: "10011802"
+                            groupId: "10011802"
+                            sxId: 2114906
+                            sxCategoryId: GUITALELE
+                            dataPoints:
+                              - id: 4087314
+                                key: Brand Image
+                                type: PASS_ON
+                                value: "https://media.justmusic.de/shop/images/hersteller/Yamaha.jpg"
+                              - id: 4087308
+                                key: Rating Count
+                                type: PASS_ON
+                                value: "1.00"
+                                parsedValue: 1
+                              - id: 4087309
+                                key: Availability
+                                type: PASS_ON
+                                value: nicht auf Lager
+                              - id: 4183437
+                                key: Short Description
+                                type: PASS_ON
+                                value: Guitarlele
+                              - id: 4009067
+                                key: Brand
+                                type: PASS_ON
+                                value: YAMAHA
+                              - id: 4087313
+                                key: Rating
+                                type: PASS_ON
+                                value: "5.00"
+                                parsedValue: 5
+                              - id: 4087311
+                                key: ArticleID
+                                type: PASS_ON
+                                value: "27583"
+                              - id: 3346233
+                                key: Preis
+                                type: PASS_ON
+                                value: 99.00 €
+                                parsedValue: 99
+                              - id: 4251804
+                                key: Availability
+                                type: PASS_ON
+                                value: nicht auf Lager
+                            image: //media.justmusic.de/Artikelbilder/Shopsystem/1000px_V2/10011802_01.jpg
+                            name: Yamaha GL 1
+                            images:
+                              - type: ALTERNATIVE
+                                url: //media.justmusic.de/Artikelbilder/Shopsystem/1000px_V2/10011802_01.jpg
+                            link: //www.justmusic.de/Gitarre-Bass/Ukulelen/Sonstige-Ukulelen-Guitarlelen/Yamaha-GL-1
+                            resultSet: null
+                            head: true
+                            relevance: 999999
+                          - identifier: "10064081"
+                            groupId: "10064081"
+                            sxId: 51345681
+                            sxCategoryId: SLIDE
+                            dataPoints:
+                              - id: 4087314
+                                key: Brand Image
+                                type: PASS_ON
+                                value: "https://media.justmusic.de/shop/images/hersteller/gator-frameworks.jpg"
+                              - id: 3346233
+                                key: Preis
+                                type: PASS_ON
+                                value: 7.00 €
+                                parsedValue: 7
+                              - id: 4087309
+                                key: Availability
+                                type: PASS_ON
+                                value: sofort verfügbar - Lieferzeit 1-3 Werktage
+                              - id: 4183437
+                                key: Short Description
+                                type: PASS_ON
+                                value: Sonstiges Zubehör
+                              - id: 4009067
+                                key: Brand
+                                type: PASS_ON
+                                value: Gator Frameworks
+                              - id: 4087311
+                                key: ArticleID
+                                type: PASS_ON
+                                value: "83457"
+                              - id: 4251804
+                                key: Availability
+                                type: PASS_ON
+                                value: sofort verfügbar - Lieferzeit 1-3 Werktage
+                            image: //media.justmusic.de/Artikelbilder/Shopsystem/1000px_V2/10064081_01.jpg
+                            name: Gator Frameworks Guitar Pick & Slide Holder for Stands Plektrenhalterung für Stativ
+                            images:
+                              - type: ALTERNATIVE
+                                url: //media.justmusic.de/Artikelbilder/Shopsystem/1000px_V2/10064081_01.jpg
+                            link: //www.justmusic.de/Gitarre-Bass/Zubehoer-Gitarren-Baesse/Sonstiges-Zubehoer/Gator-Frameworks-Guitar-Pick-Slide-Holder-for-Stands-Plektrenhalterung-fuer-Stativ
+                            resultSet: null
+                            head: true
+                            relevance: 999998
+                          - identifier: "10064076"
+                            groupId: "10064076"
+                            sxId: 51345671
+                            sxCategoryId: GUITAR_STAND
+                            dataPoints:
+                              - id: 4087314
+                                key: Brand Image
+                                type: PASS_ON
+                                value: "https://media.justmusic.de/shop/images/hersteller/gator-frameworks.jpg"
+                              - id: 3346233
+                                key: Preis
+                                type: PASS_ON
+                                value: 10.00 €
+                                parsedValue: 10
+                              - id: 4087309
+                                key: Availability
+                                type: PASS_ON
+                                value: nicht auf Lager – verfügbar ab 3.10.2023
+                              - id: 4183437
+                                key: Short Description
+                                type: PASS_ON
+                                value: Gitarrenständer
+                              - id: 4009067
+                                key: Brand
+                                type: PASS_ON
+                                value: Gator Frameworks
+                              - id: 4087311
+                                key: ArticleID
+                                type: PASS_ON
+                                value: "83453"
+                              - id: 4251804
+                                key: Availability
+                                type: PASS_ON
+                                value: nicht auf Lager
+                            image: //media.justmusic.de/Artikelbilder/Shopsystem/1000px_V2/10064076_01.jpg
+                            name: Gator Frameworks Black Wall Mount Guitar Hanger Wandhalterung für Gitarren
+                            images:
+                              - type: ALTERNATIVE
+                                url: //media.justmusic.de/Artikelbilder/Shopsystem/1000px_V2/10064076_01.jpg
+                            link: //www.justmusic.de/Gitarre-Bass/Zubehoer-Gitarren-Baesse/Gitarrenstaender/Gator-Frameworks-Black-Wall-Mount-Guitar-Hanger-Wandhalterung-fuer-Gitarren
+                            resultSet: null
+                            head: true
+                            relevance: 999997
+                      - type: all
+                        name: All Results
+                        totalResults: 256
+                        placements: []
+                    totalResults: 256
+                    interpretedQuery:
+                      matchSources: []
+                      category: null
+                      normalizedCategory: null
+                      corrected: guitar
+                      queryWasCorrected: false
+                      original: guitar
+                      intentMatched: false
+                      confidence: 2
+                      tags: []
+                      resultSetType: USER_QUERY
+                      filterMatchType: FULL_FILTER_MATCHES
+                    relatedQueries: []
+                    answerText: Wir haben <span class="sx-highlight">256 Produkte</span> für Sie gefunden.
+                    offset: 0
+                    limit: 30
+                    activeSortingOption: {}
+                    sortingOptions:
+                      - name: Preis aufsteigend
+                        key: "3346233"
+                        type: ATTRIBUTE
+                        sort: ASC
+                      - name: Preis absteigend
+                        key: "3346233"
+                        type: ATTRIBUTE
+                        sort: DESC
+                      - name: B-Ware
+                        key: "4121181"
+                        type: ATTRIBUTE
+                        sort: DESC
+                      - name: "% SALE %"
+                        key: "4121180"
+                        type: ATTRIBUTE
+                        sort: DESC
+                    activeFilterOptions: []
+                    activeSxFilterOptions: []
+                    activeRanking: 64e4acbfc214e159e7726f83
+                    filterOptions:
+                      - key: "3346233"
+                        name: Preis
+                        type: RANGE
+                        semanticLevel: 1
+                        visible: true
+                        min: 2.99
+                        max: 3949
+                        counts:
+                          "2.99": 1
+                          "4.99": 1
+                          "5.7": 1
+                          "5.9": 2
+                          "6.7": 1
+                          "7.0": 1
+                          "7.9": 6
+                        count: 256
+                        unit: €
+                        fractionalDigits: 2
+                      - key: "4009067"
+                        name: Brand
+                        type: COLLECTION
+                        semanticLevel: 1
+                        visible: true
+                        values:
+                          - key: "4009132"
+                            name: Analog Cases
+                            value: Analog Cases
+                            count: 1
+                          - key: "4009344"
+                            name: AQUILA CORDE
+                            value: AQUILA CORDE
+                            count: 1
+                          - key: "4009661"
+                            name: BATON ROUGE
+                            value: BATON ROUGE
+                            count: 1
+                        count: 256
+                      - key: "4058631"
+                        name: Farbe
+                        type: COLOR
+                        semanticLevel: 1
+                        visible: true
+                        values:
+                          - key: "256261943"
+                            name: Blau
+                            value: Blau_custom
+                            color: blue
+                            count: 6
+                          - key: "256261950"
+                            name: Blonde/Champagner
+                            value: Blonde/Champagner_1651054176300_custom
+                            color: "#f7e7ce"
+                            count: 1
+                          - key: "256261955"
+                            name: Braun
+                            value: Braun_custom
+                            color: "#8b4513"
+                            count: 13
+                        count: 176
+                      - key: "4058551"
+                        name: Mensur
+                        type: RANGE
+                        semanticLevel: 1
+                        visible: true
+                        min: 36.5
+                        max: 86.36
+                        counts:
+                          "36.5": 1
+                          "38.1": 2
+                          "42.0": 1
+                          "43.2": 5
+                          "43.3": 3
+                          "43.5": 4
+                        count: 104
+                        unit: cm
+                        fractionalDigits: 1
+                    sxFilterOptions: []
+                    filterMapping:
+                      Produkte:
+                        - "3346233"
+                        - "4009067"
+                        - "4058631"
+                        - "4058551"
+                      Kategorien: []
+                      Videos: []
+                      Blog: []
+                      _: []
+                      Other: []
+                      productpages: []
+                properties:
+                  searchResults:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        name:
+                          type: string
+                        totalResults:
+                          type: integer
+                        totalResultsVariants:
+                          type: integer
+                        placements:
+                          type: array
+                          items:
+                            type: object
+                        results:
+                          type: array
+                          x-stoplight:
+                            id: j3rq62834gq6f
+                          items:
+                            $ref: "#/components/schemas/SearchResult"
+                  totalResults:
+                    type: integer
+                  interpretedQuery:
+                    type: object
+                    properties:
+                      matchSources:
+                        type: array
+                        items:
+                          type: object
+                      category:
+                        type: string
+                        nullable: true
+                      normalizedCategory:
+                        type: string
+                        nullable: true
+                      corrected:
+                        type: string
+                      queryWasCorrected:
+                        type: boolean
+                      original:
+                        type: string
+                      intentMatched:
+                        type: boolean
+                      confidence:
+                        type: integer
+                      tags:
+                        type: array
+                        items:
+                          type: object
+                      resultSetType:
+                        type: string
+                      filterMatchType:
+                        type: string
+                  relatedQueries:
+                    type: array
+                    items:
+                      type: object
+                  answerText:
+                    type: string
+                  offset:
+                    type: integer
+                  limit:
+                    type: integer
+                  activeSortingOption:
+                    type: object
+                  sortingOptions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        key:
+                          type: string
+                        type:
+                          type: string
+                        sort:
+                          type: string
+                  activeFilterOptions:
+                    type: array
+                    items:
+                      type: object
+                  activeSxFilterOptions:
+                    type: array
+                    items:
+                      type: object
+                  activeRanking:
+                    type: string
+                  filterOptions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        key:
+                          type: string
+                        name:
+                          type: string
+                        type:
+                          type: string
+                        semanticLevel:
+                          type: integer
+                        visible:
+                          type: boolean
+                        min:
+                          type: number
+                        max:
+                          type: number
+                        count:
+                          type: integer
+                        unit:
+                          type: string
+                        fractionalDigits:
+                          type: integer
+                        values:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              key:
+                                type: string
+                              name:
+                                type: string
+                              value:
+                                type: string
+                              color:
+                                type: string
+                              count:
+                                type: integer
+                        counts:
+                          type: object
+                          x-stoplight:
+                            id: go2tclba3dlkp
+                  sxFilterOptions:
+                    type: array
+                    items:
+                      type: object
+                  filterMapping:
+                    type: object
+                    properties:
+                      Produkte:
+                        type: array
+                        items:
+                          type: string
+                      Kategorien:
+                        type: array
+                        items:
+                          type: object
+                      Videos:
+                        type: array
+                        items:
+                          type: object
+                      Blog:
+                        type: array
+                        items:
+                          type: object
+                      _:
+                        type: array
+                        items:
+                          type: object
+                      Other:
+                        type: array
+                        items:
+                          type: object
+                      productpages:
+                        type: array
+                        items:
+                          type: object
+        "404":
+          description: Not found
+      operationId: get-v1-search-project-id
+      x-stoplight:
+        id: onv4qz9elbxwq
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: query
+          description: a search term
+        - schema:
+            type: integer
+          in: query
+          name: offset
+          description: the used offset / start point of the returned search result
+        - schema:
+            type: integer
+          in: query
+          name: limit
+          description: the number of products to be part of the search result
+        - schema:
+            type: string
+          in: query
+          name: filters
+          description: 'JSON array containing filters for product search OR content search (NOT both at the same time) e.g. with collection and range filter: [\{"name":"Color", "type":"products", "values":[\{"value":"red"\}]}, \{"name":"price", "type":"products", "min":2.0, "max":10.0\}] or [\{"name":"Topics", "type":"content", "values":[\{"value":"Beach"\}]\}] - URL encoded! Please make sure the JSON has the exact form shown here, eg. numeric filter objects have always min and max attributes set. We distinguish between filters for product search and content search'
+        - schema:
+            type: string
+          in: query
+          name: sort
+          description: A string containing the name of the sort option - e.g. "price descending" - URL encoded!
+        - schema:
+            type: string
+          in: query
+          name: sort-complex
+          description: 'JSON object containing the sorting information: \{"key": "123421", "direction":"ASC"\} - URL encoded! for rankingStrategies it would be:\{"rankingStrategyId":"60fe8a94097548517a966752", "type":"STRATEGY"\}'
+        - schema:
+            type: string
+          in: query
+          name: user-group
+          description: "You may add a user group for the user who is currently searching. If set, all user-group-specific attributes will be internally used."
+        - schema:
+            type: string
+          in: query
+          name: catalog-id
+          description: restrict the results by a catalog given by id
+        - schema:
+            type: string
+          in: query
+          name: session-id
+          description: Add a sessionId for the user to each request
+        - schema:
+            type: boolean
+          in: query
+          name: autocorrect
+          description: You may turn the autocorrection off at some point. This allows you to do Google style SERPs with "We searched for 'teacup'. Search for 'Teecup' instead"
+        - schema:
+            type: string
+          in: query
+          name: query-tag
+          description: A free-form query tag, used to tag your queries so that they can later be clustered in search analytics. An example might be tagging traffic from your app (query-tag=app) and webstore (query-tag=store) differently.
+      description: |-
+        Search products by query.
+
+        Please make sure to always attach a sessionId query parameter to suggestion/search queries.
+
+        And also make sure to forward the client IP address via HTTP header called HTTP_CLIENT_IP - otherwise settings like "max queries per IP per hour" do not work.
+    post:
+      summary: "Advanced product search"
+      tags: [search]
+      operationId: post-search-v1-project-id
+      security: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  searchResults:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        name:
+                          type: string
+                        totalResults:
+                          type: integer
+                        totalResultsVariants:
+                          type: integer
+                        placements:
+                          type: array
+                          items:
+                            type: object
+                        results:
+                          type: array
+                          x-stoplight:
+                            id: j3rq62834gq6f
+                          items:
+                            $ref: "#/components/schemas/SearchResult"
+                  totalResults:
+                    type: integer
+                  interpretedQuery:
+                    type: object
+                    properties:
+                      matchSources:
+                        type: array
+                        items:
+                          type: object
+                      category:
+                        type: string
+                        nullable: true
+                      normalizedCategory:
+                        type: string
+                        nullable: true
+                      corrected:
+                        type: string
+                      queryWasCorrected:
+                        type: boolean
+                      original:
+                        type: string
+                      intentMatched:
+                        type: boolean
+                      confidence:
+                        type: integer
+                      tags:
+                        type: array
+                        items:
+                          type: object
+                      resultSetType:
+                        type: string
+                      filterMatchType:
+                        type: string
+                  relatedQueries:
+                    type: array
+                    items:
+                      type: object
+                  answerText:
+                    type: string
+                  offset:
+                    type: integer
+                  limit:
+                    type: integer
+                  activeSortingOption:
+                    type: object
+                  sortingOptions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        key:
+                          type: string
+                        type:
+                          type: string
+                        sort:
+                          type: string
+                  activeFilterOptions:
+                    type: array
+                    items:
+                      type: object
+                  activeSxFilterOptions:
+                    type: array
+                    items:
+                      type: object
+                  activeRanking:
+                    type: string
+                  filterOptions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        key:
+                          type: string
+                        name:
+                          type: string
+                        type:
+                          type: string
+                        semanticLevel:
+                          type: integer
+                        visible:
+                          type: boolean
+                        min:
+                          type: number
+                        max:
+                          type: number
+                        count:
+                          type: integer
+                        unit:
+                          type: string
+                        fractionalDigits:
+                          type: integer
+                        values:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              key:
+                                type: string
+                              name:
+                                type: string
+                              value:
+                                type: string
+                              color:
+                                type: string
+                              count:
+                                type: integer
+                        counts:
+                          type: object
+                          x-stoplight:
+                            id: go2tclba3dlkp
+                  sxFilterOptions:
+                    type: array
+                    items:
+                      type: object
+                  filterMapping:
+                    type: object
+                    properties:
+                      Produkte:
+                        type: array
+                        items:
+                          type: string
+                      Kategorien:
+                        type: array
+                        items:
+                          type: object
+                      Videos:
+                        type: array
+                        items:
+                          type: object
+                      Blog:
+                        type: array
+                        items:
+                          type: object
+                      _:
+                        type: array
+                        items:
+                          type: object
+                      Other:
+                        type: array
+                        items:
+                          type: object
+                      productpages:
+                        type: array
+                        items:
+                          type: object
+        "404":
+          description: "Not found"
+      x-stoplight:
+        id: 1oc3g7m0wx34a
+      description: |-
+        Search products by query.
+
+        Please make sure to always attach a sessionId to the request body to suggestion/search queries.
+
+        And also make sure to forward the client IP address via HTTP header called HTTP_CLIENT_IP - otherwise settings like "max queries per IP per hour" do not work.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                offset:
+                  type: integer
+                limit:
+                  type: integer
+                log:
+                  type: boolean
+                userGroup:
+                  type: string
+                sessionId:
+                  type: string
+                includeContentGroups:
+                  type: string
+                excludeContentGroups:
+                  type: string
+                catalogId:
+                  type: integer
+                autocorrect:
+                  type: boolean
+                filters:
+                  type: string
+                includeTags:
+                  type: string
+                highlightQueryTerms:
+                  type: boolean
+                sort:
+                  type: string
+            examples:
+              Example 1:
+                value:
+                  query: test
+                  offset: 15
+                  limit: 15
+                  log: true
+                  userGroup: germany
+                  sessionId: tests
+                  includeContentGroups: string
+                  excludeContentGroups: string
+                  catalogId: 4565
+                  autocorrect: true
+                  filters: einjson
+                  includeTags: string
+                  highlightQueryTerms: true
+                  sort: string
+  "/search/v1/{project-id}/suggestions":
+    parameters:
+      - schema:
+          type: integer
+        name: project-id
+        in: path
+        required: true
+    get:
+      summary: Get search suggestion results
+      security: []
+      tags: [search]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  Example 1:
+                    searchResults:
+                      - type: products
+                        name: Products
+                        totalResults: 136
+                        totalResultsVariants: 136
+                        results:
+                          - - identifier: "10064765"
+                              groupId: "10064765"
+                              sxId: 77346208
+                              sxCategoryId: ELECTRIC_GUITAR
+                              dataPoints:
+                                - id: 4714637
+                                  key: Category
+                                  type: PASS_ON
+                                  value: Semi-Hollow & Jazz Guitars
+                                  isCategory: true
+                                - id: 4711258
+                                  key: Brand Image
+                                  type: PASS_ON
+                                  value: "https://media.justmusic.de/shop/images/hersteller/Gretsch.jpg"
+                                - id: 4710490
+                                  key: Brand
+                                  type: PASS_ON
+                                  value: Gretsch Guitars
+                                - id: 4710618
+                                  key: Availability
+                                  type: PASS_ON
+                                  value: immediately available - delivery time 1-3 workdays
+                                - id: 4710493
+                                  key: ArticleID
+                                  type: PASS_ON
+                                  value: "84333"
+                                - id: 4710596
+                                  key: Short Description
+                                  type: PASS_ON
+                                  value: Hollow-Body Electric Guitar
+                                - id: 4711174
+                                  key: Price
+                                  type: PASS_ON
+                                  value: €3949.00
+                                  parsedValue: 3949
+                              image: //media.justmusic.de/Artikelbilder/Shopsystem/1000px_V2/10064765_01.jpg
+                              name: Gretsch Guitars G6136T-140 LTD 140th Double Platinum Falcon w./Bigsby 2-Tone /Stone Platinum
+                              images:
+                                - type: ALTERNATIVE
+                                  url: //media.justmusic.de/Artikelbilder/Shopsystem/1000px_V2/10064765_01.jpg
+                              link: //www.justmusic.de/en/Guitars-Basses/Electric-Guitars/Semi-Hollow-Jazz-Guitars/Gretsch-Guitars-G6136T-140-LTD-140th-Double-Platinum-Falcon-w-Bigsby-2-Tone-Stone-Platinum
+                              resultSet: null
+                              head: true
+                              relevance: 1000000
+                          - - identifier: "14006428"
+                              groupId: "14006428"
+                              sxId: 25035215
+                              sxCategoryId: ELECTRIC_GUITAR
+                              dataPoints:
+                                - id: 4714637
+                                  key: Category
+                                  type: PASS_ON
+                                  value: Semi-Hollow & Jazz Guitars
+                                  isCategory: true
+                                - id: 4711258
+                                  key: Brand Image
+                                  type: PASS_ON
+                                  value: "https://media.justmusic.de/shop/images/hersteller/Gretsch.jpg"
+                                - id: 4710490
+                                  key: Brand
+                                  type: PASS_ON
+                                  value: Gretsch Guitars
+                                - id: 4710618
+                                  key: Availability
+                                  type: PASS_ON
+                                  value: immediately available - delivery time 1-3 workdays
+                                - id: 4710493
+                                  key: ArticleID
+                                  type: PASS_ON
+                                  value: "65217"
+                                - id: 4710596
+                                  key: Short Description
+                                  type: PASS_ON
+                                  value: Hollow-Body Electric Guitar
+                                - id: 4711174
+                                  key: Price
+                                  type: PASS_ON
+                                  value: €3299.00
+                                  parsedValue: 3299
+                              image: //media.justmusic.de/Artikelbilder/Shopsystem/1000px_V2/14006428_01.jpg
+                              name: Gretsch Guitars G6120TFM-BSNV Brian Setzer Sign. Nashville /w Bigsby Orange Stain
+                              images:
+                                - type: ALTERNATIVE
+                                  url: //media.justmusic.de/Artikelbilder/Shopsystem/1000px_V2/14006428_01.jpg
+                              link: //www.justmusic.de/en/Guitars-Basses/Electric-Guitars/Semi-Hollow-Jazz-Guitars/Gretsch-Guitars-G6120TFM-BSNV-Brian-Setzer-Sign-Nashville-w-Bigsby-Orange-Stain
+                              resultSet: null
+                              head: true
+                              relevance: 999999
+                          - - identifier: "10058143"
+                              groupId: "10058143"
+                              sxId: 25037296
+                              sxCategoryId: ELECTRIC_GUITAR
+                              dataPoints:
+                                - id: 4714637
+                                  key: Category
+                                  type: PASS_ON
+                                  value: Semi-Hollow & Jazz Guitars
+                                  isCategory: true
+                                - id: 4711258
+                                  key: Brand Image
+                                  type: PASS_ON
+                                  value: "https://media.justmusic.de/shop/images/hersteller/Gretsch.jpg"
+                                - id: 4710490
+                                  key: Brand
+                                  type: PASS_ON
+                                  value: Gretsch Guitars
+                                - id: 4710618
+                                  key: Availability
+                                  type: PASS_ON
+                                  value: immediately available - delivery time 1-3 workdays
+                                - id: 4710493
+                                  key: ArticleID
+                                  type: PASS_ON
+                                  value: "73433"
+                                - id: 4710596
+                                  key: Short Description
+                                  type: PASS_ON
+                                  value: Hollow-Body Electric Guitar
+                                - id: 4711174
+                                  key: Price
+                                  type: PASS_ON
+                                  value: €2499.00
+                                  parsedValue: 2499
+                              image: //media.justmusic.de/Artikelbilder/Shopsystem/1000px_V2/10058143_01.jpg
+                              name: Gretsch Guitars G6118T-SGR Players Ed. Anniv.2-Tone Smoke Green
+                              images:
+                                - type: ALTERNATIVE
+                                  url: //media.justmusic.de/Artikelbilder/Shopsystem/1000px_V2/10058143_01.jpg
+                              link: //www.justmusic.de/en/Guitars-Basses/Electric-Guitars/Semi-Hollow-Jazz-Guitars/Gretsch-Guitars-G6118T-SGR-Players-Ed-Anniv-2-Tone-Smoke-Green
+                              resultSet: null
+                              head: true
+                              relevance: 999998
+                    totalResults: 136
+                    interpretedQuery:
+                      matchSources: []
+                properties:
+                  searchResults:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        name:
+                          type: string
+                        totalResults:
+                          type: integer
+                        totalResultsVariants:
+                          type: integer
+                        results:
+                          type: array
+                          x-stoplight:
+                            id: n6lhi0o0tiolv
+                          items:
+                            $ref: "#/components/schemas/SearchResult"
+                  totalResults:
+                    type: integer
+                  interpretedQuery:
+                    type: object
+                    properties:
+                      matchSources:
+                        type: array
+                        items:
+                          type: object
+        "404":
+          description: Not found
+      operationId: get-v1-search-project-id-suggestions
+      x-stoplight:
+        id: p8wkfofrdelxo
+      description: |-
+        Call this endpoint to retrieve search suggestions as the user types.
+
+        Please make sure to always attach a sessionId query parameter to suggestion/search queries.
+
+        And also make sure to forward the client IP address via HTTP header called HTTP_CLIENT_IP - otherwise settings like "max queries per IP per hour" do not work.
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: query
+          description: a search term
+        - schema:
+            type: string
+          in: query
+          name: user-group
+          description: "You may add a user group for the user who is currently searching. If set, all user-group-specific attributes will be internally used."
+        - schema:
+            type: string
+          in: query
+          name: catalog-id
+          description: restrict the results by a catalog given by id
+        - schema:
+            type: string
+          in: query
+          name: session-id
+          description: Add a sessionId for the user to each request
+        - schema:
+            type: boolean
+          in: query
+          name: cache
+          description: define whether the results should be loaded from cache
+        - schema:
+            type: string
+          in: query
+          name: query-tag
+          description: A free-form query tag, used to tag your queries so that they can later be clustered in search analytics. An example might be tagging traffic from your app (query-tag=app) and webstore (query-tag=store) differently.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+  "/platform/v1/{project-id}/products":
+    parameters:
+      - schema:
+          type: integer
+        name: project-id
+        in: path
+        required: true
+    delete:
+      summary: Delete products
+      tags: [data-management]
+      security:
+        - apiKey: []
+      operationId: delete-v1-platform-project-id-products
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not found
+      x-stoplight:
+        id: o0n8wbj0mur16
+      description: |-
+        Endpoint to delete a number of products given by identifier.
+
+        If you want to delete more products or products without explicitely give a list of identifiers, then please consider the full update endpoints to re-upload all valid products and get everything else deleted.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                identifiers:
+                  type: array
+                  items:
+                    type: string
+              x-examples:
+                Example 1:
+                  identifiers:
+                    - 6379b9_E
+                    - 6379b9_F
+    post:
+      summary: Update products incrementally
+      operationId: post-v1-platform-project-id-products
+      tags: [data-management]
+      security:
+        - apiKey: []
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not found
+      x-stoplight:
+        id: hcasp1eapvyrq
+      description: |-
+        Endpoint to update a single product or a number of products. This kind of update is suitable for a maximum of 10.000 products. For more products use step 2 and 3 of the full update process by using the "upload batch of products" endpoint, which allows you to send batches of products in seperated requests and finally start the update process via the "start batched products" endpoint.
+
+
+        If the uploaded JSON breaks the JSON Schema, you will get detailed information about the error in the API response.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                Example 1:
+                  products:
+                    - identifier: "61149"
+                      groupIdentifier: "61149"
+                      name: Branching Life Wall Hanging
+                      productUrl: "https://www.tenthousandvillages.com/wall-decor/e252ce8d53a61149d6c2d0a7c5147617"
+                      categories:
+                        - path:
+                            - Home
+                            - Decoration
+                        - path:
+                            - Home
+                            - House
+                            - Living Room
+                      settings:
+                        includeUserGroups:
+                          - "23"
+                          - "42"
+                        excludeUserGroups:
+                          - "64"
+                      images:
+                        - url: "https://www.tenthousandvillages.com/media/catalog/product/cache/1/large_image/100x100/9df78eab33525d08d6e5fb8d27136e95/6/6/6607890_1.jpg"
+                          type: LARGE
+                        - url: "https://www.tenthousandvillages.com/media/catalog/product/cache/1/small_image/100x100/9df78eab33525d08d6e5fb8d27136e95/6/6/6607890_1.jpg"
+                          type: SMALL
+                        - url: "https://www.tenthousandvillages.com/media/catalog/product/cache/1/thumb_image/100x100/9df78eab33525d08d6e5fb8d27136e95/6/6/6607890_1.jpg"
+                          type: THUMB
+                      attributes:
+                        - key: Price
+                          value: "175"
+                        - key: Price
+                          value: "170"
+                          userGroups:
+                            - "23, 42"
+                        - key: Color
+                          value: blue
+                        - key: Made in
+                          value: Peru
+                        - key: Description
+                          value: Blending different colors to create specific hues|Cotton threads form the warp; wool coils form the weft.|Peruvian artisans used coiled wool to create this painterly image with depth and feeling.|Peruvian weavers use wool from sheep of the Andes.|They wash it in a local river|To make coiled wool tapestries|card and dye it.|ready to create a tapestry on a wooden loom.|they roll the wool fibers into long strands - "I love it"
+                    - identifier: 6379b9_B
+                      groupIdentifier: "937"
+                      name: Garden Kitty Planter (Small)
+                      productUrl: "https://www.tenthousandvillages.com/pet-parent/6379b95b7e4577dd7216dd13ae6ba0d4"
+                      categories:
+                        - path:
+                            - Home
+                            - Garden
+                            - Garden Maintainance
+                      image: "https://www.tenthousandvillages.com/media/catalog/product/cache/1/small_image/100x100/9df78eab33525d08d6e5fb8d27136e95/6/6/6607890_1.jpg"
+                      attributes:
+                        - key: Price
+                          value: "10.99"
+                        - key: Price
+                          value: "6.99"
+                          userGroups:
+                            - "42"
+                        - key: Price
+                          value: "2.99"
+                          userGroups:
+                            - "23"
+                        - key: Color
+                          value: red
+                        - key: Made in
+                          value: USA
+                        - key: Description
+                          value: The Garden Kitty Planter is handcrafted in Bangladesh where makers from Corr-The Jute Works showcase their skill in ceramics by crafting each white-washed terracotta planter by hand.|The perfect pot for cat nip!
+                    - identifier: 6379b9_C
+                      groupIdentifier: "937"
+                      name: Garden Kitty Planter (Small) Typ C
+                      productUrl: "https://www.tenthousandvillages.com/pet-parent/6379b95b7e4577dd7216dd13ae6ba0d4"
+                      categories:
+                        - path:
+                            - Home
+                            - Garden
+                            - Garden Maintainance
+                      image: "https://www.tenthousandvillages.com/media/catalog/product/cache/1/small_image/100x100/9df78eab33525d08d6e5fb8d27136e95/6/6/6607890_1.jpg"
+                      attributes:
+                        - key: Price
+                          value: "5.99"
+                        - key: Price
+                          value: "3.99"
+                          userGroups:
+                            - "23"
+                        - key: Price
+                          value: "7.99"
+                          userGroups:
+                            - "42"
+                        - key: Made in
+                          value: Germany
+                          userGroups:
+                            - "23"
+                        - key: Color
+                          value: green
+                        - key: Description
+                          value: The Garden Kitty Planter is handcrafted in Bangladesh where makers from Corr-The Jute Works showcase their skill in ceramics by crafting each white-washed terracotta planter by hand.|The perfect pot for cat nip!
+              properties:
+                products:
+                  type: array
+                  x-stoplight:
+                    id: z07km4q3dz1gk
+                  items:
+                    $ref: "#/components/schemas/ProductInput"
+      parameters:
+        - schema:
+            type: boolean
+          in: query
+          name: partial
+          description: When partial is set to true only the attributes that are part of the product input are updated while other attributes are untouched
+  "/platform/v1/{project-id}/products/batch/initiate":
+    parameters:
+      - schema:
+          type: string
+        name: project-id
+        in: path
+        required: true
+    post:
+      summary: Initiate full update
+      security:
+        - apiKey: []
+      tags: [data-management]
+      operationId: post-v1-platform-project-id-products-batch-initiate
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not found
+      x-stoplight:
+        id: 7wvw4ij78l18e
+      description: Use this endpoint if you want to initiate a full update. Afterwards you can send batches of products in seperate requests in step 2. If you then trigger the update with step 3 all products that are currently in your search but were not contained in the batches you uploaded will get deleted!
+  "/platform/v1/{project-id}/products/batch/upload":
+    parameters:
+      - schema:
+          type: integer
+        name: project-id
+        in: path
+        required: true
+    post:
+      summary: Upload batch of products
+      security:
+        - apiKey: []
+      tags: [data-management]
+      operationId: post-v1-platform-project-id-products-batch-upload
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not found
+      x-stoplight:
+        id: xb9osqqf83aq4
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                products:
+                  type: array
+                  x-stoplight:
+                    id: vipiv09es38fg
+                  items:
+                    $ref: "#/components/schemas/ProductInput"
+      description: |
+        Use this resource to upload a batch of products
+
+        If the uploaded JSON breaks the JSON Schema, you will get detailed information about the error in the API response. 
+        
+        Please check the `status` attribute in the JSON response after the upload of a batch.
+        The response should contain `status: success`.
+
+        *Attention*: all attribute objects in the `attributes` array need to have the value given as String. This means, that even numeric values need to be converted to Strings. Additonally, numeric values need to have a unit, especially in case of the "Price" attribute which each product usually has.
+
+        User-group-specific attributes: they API allows to receive attributes which are only valid for a dedicated user group. This way you may send in eg. multiple prices which are only valid for certain users. Please make sure - if you use this feature - to always send in a default value for the corresponding attribute without a set user group. 
+        So in case of a price we need to have a default price attribute like:
+        ```
+        { 
+          "key": "price", 
+          "value":"9,99 EUR"
+        }
+        ```
+        Then there might be multiple objects with user-group specific values:
+        ```
+        {
+          "key": "price", 
+          "value":"9,98 EUR", 
+          "userGroups": ["42","7"]
+        }, 
+        { 
+          "key": "price", 
+          "value":"7,99 EUR", 
+          "userGroups":["9"]
+        }
+        ```
+        Price attributes: there are two special flags for price attributes. You may add a "settings" property on the attribute object which contains the boolean properties "oldPrice" and "newPrice". That way strike prices may be programmatically defined.
+        ```
+        { 
+          "key": "strike price", 
+          "value":"9,99 EUR", 
+          "settings": {
+            "oldPrice": true
+          }
+        },
+        { 
+          "key": "price", 
+          "value":"19,99 EUR", 
+          "settings": {
+            "newPrice": true
+          }
+        }
+        ```
+  "/platform/v1/{project-id}/products/batch/commit":
+    parameters:
+      - schema:
+          type: string
+        name: project-id
+        in: path
+        required: true
+    post:
+      summary: Commit full update
+      security:
+        - apiKey: []
+      tags: [data-management]
+      operationId: post-v1-platform-project-id-products-batch-commit
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Project with project-id not found
+      x-stoplight:
+        id: 9yc3useh6rtle
+      description: This endpoint starts an update for all before uploaded batches
+  "/platform/v1/projects":
+    get:
+      summary: List projects
+      description: Returns all available projects of the account (defined by API key). The projects can be filtered by tags.
+      security:
+        - apiKey: []
+      tags: [data-management]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  projects:
+                    type: array
+                    x-stoplight:
+                      id: jx98tsfgn7n37
+                    items:
+                      $ref: "#/components/schemas/Project"
+        "401":
+          description: Unauthorized
+      operationId: "get-https:-orca-api.zoovu.com-v1-platform-projects"
+      x-stoplight:
+        id: 6rcqjdkpn7p13
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: tags
+          description: 'an array of tag names, e.g. ["us_sale_channel", "us_staging"]'
+          required: false
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1232
+          description: Zoovu internal identifier
+        identifier:
+          type: string
+          example: ABC-123
+          description: Public identifier (identifier from original data source)
+        groupId:
+          type: string
+          example: DEF-213
+          description: Used to group variants of the same product line
+        name:
+          type: string
+          example: Flux Capacitor
+          description: Name or label of the product
+        link:
+          type: string
+          example: https://zoovu.com
+          description: Link to the product's detail page
+        images:
+          type: array
+          description: List of images
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+                example: https://zoovu.com/wp-content/themes/zoovuthemev3/images/logo-blue.svg
+              type:
+                type: string
+                example: LARGE
+                description: Possible values are LARGE, SMALL, MEDIUM
+        categories:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: array
+                items:
+                  type: string
+        facts:
+          type: array
+          items:
+            type: object
+            properties:
+              attributeId:
+                type: integer
+              attribute:
+                type: string
+              value:
+                type: string
+              type:
+                type: string
+              settings:
+                type: array
+                items:
+                  type: string
+              valueId:
+                type: integer
+        lastUpdateTs:
+          type: integer
+
+      x-examples:
+        Example 1:
+          id: 67359595
+          identifier: 120CP-UBDYBLPNC
+          groupId: 120CP-UBDYBLPNC
+          name: Dinghy Blunt Pinecone
+          link: "https://landyachtz.com/products/dinghy-blunt-pinecone"
+          images:
+            - url: "https://landyachtz.com/cdn/shop/products/120CP-UBDYBLPNC-Dinghy_Blunt_-_Pinecone_-_Complete-Cruiser-Boards-Face-Web_1200x1200.jpg?v=1623457336"
+              type: LARGE
+          categories:
+            - path:
+                - Longboards
+          facts:
+            - attributeId: 263620226
+              attribute: Canonical URL
+              value: "https://landyachtz.com/products/dinghy-blunt-pinecone"
+              type: UNTYPED_ATTRIBUTE
+              settings:
+                - description
+            - attributeId: 263620231
+              attribute: price
+              value: "199.99"
+              type: NUMERIC_ATTRIBUTE
+              unit: ""
+              settings: []
+            - attributeId: 263620230
+              attribute: features
+              valueId: 263620241
+              value: Kicktail
+              type: TEXT_ATTRIBUTE
+              settings: []
+            - attributeId: 263620223
+              attribute: semantic-enhancement
+              value: "ubdyblpnc, 120c, 120 cp, web_1200x1200 jpg?v=1623457336, 1200 x, 120cp-ubdyblpnc, dinghy, web, 120cp, https, https://landyachtz com/cdn/shop/products/120cp, https://landyachtzcom/cdn/shop/products/120cp, 120cp-ubdyblpnc-dinghy, 120cp ubdyblpnc dinghy, htt, web_1200x1200jpg?v=1623457336, 120, https://landyachtz.com/cdn/shop/products/120cp, 1, web_1200x1200.jpg?v=1623457336, 1200, 120cpubdyblpncdinghy, http, 120cp ubdyblpnc, web_1, 120cpubdyblpnc, web_"
+              type: UNTYPED_ATTRIBUTE
+              settings:
+                - description
+            - attributeId: 263620230
+              attribute: features
+              valueId: 263620239
+              value: LOW CAVE
+              type: TEXT_ATTRIBUTE
+              settings: []
+            - attributeId: 263620233
+              attribute: name
+              value: Dinghy Blunt Pinecone
+              type: UNTYPED_ATTRIBUTE
+              settings:
+                - description
+            - attributeId: 263556687
+              attribute: All Products
+              value: "TRUE"
+              type: BOOLEAN_ATTRIBUTE
+              settings: []
+            - attributeId: 263620230
+              attribute: features
+              valueId: 263620237
+              value: One Board One Tree
+              type: TEXT_ATTRIBUTE
+              settings: []
+            - attributeId: 263620227
+              attribute: description
+              value: "The Dinghy Blunt Pinecone Skateboard is an all purpose cruiser that pays homage to the conifer rich rainforests of the Pacific North West region in which we reside. Our Dinghy Blunt shape has a little extra width where you need it and a good amount of taper to allow for a more directional feel and some added room around the front foot. Matched up with slightly wider trucks than the Dinghy, this shape is great for riders with bigger feet or anyone looking for a little more stability and confidence out of their cruiser board. We opted for the slightly smaller Fatty Hawgs to make the Dinghy Blunt Pinecone easier to slide, ollie and live the all terrain life."
+              type: UNTYPED_ATTRIBUTE
+              settings:
+                - description
+            - attributeId: 263620229
+              attribute: _urlhash
+              value: 73b4ef1161506160c93eb82bcac2a362c1fd2db0
+              type: UNTYPED_ATTRIBUTE
+              settings:
+                - description
+            - attributeId: 263620221
+              attribute: _row-number
+              value: "1"
+              type: UNTYPED_ATTRIBUTE
+              settings:
+                - description
+            - attributeId: 263765521
+              attribute: Kicktail
+              value: "TRUE"
+              type: BOOLEAN_ATTRIBUTE
+              settings: []
+            - attributeId: 263620230
+              attribute: features
+              valueId: 263620248
+              value: SANDED WHEEL WELLS
+              type: TEXT_ATTRIBUTE
+              settings: []
+            - attributeId: 263620230
+              attribute: features
+              valueId: 263620246
+              value: 100% Canadian Maple
+              type: TEXT_ATTRIBUTE
+              settings: []
+          lastUpdateTs: 1686054908546
+    SearchResult:
+      type: object
+      properties:
+        identifier:
+          type: string
+        groupId:
+          type: string
+        sxId:
+          type: integer
+        sxCategoryId:
+          type: string
+        dataPoints:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              key:
+                type: string
+              type:
+                type: string
+              value:
+                type: string
+              isCategory:
+                type: boolean
+              parsedValue:
+                type: integer
+              matched:
+                type: boolean
+        image:
+          type: string
+        name:
+          type: string
+        images:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              url:
+                type: string
+        link:
+          type: string
+        head:
+          type: boolean
+        relevance:
+          type: integer
+      x-examples:
+        Example 1:
+          identifier: "10030269"
+          groupId: "10030269"
+          sxId: 25015757
+          sxCategoryId: CLASSICAL_GUITAR
+          dataPoints:
+            - id: 4714637
+              key: Category
+              type: PASS_ON
+              value: 4/4 Size Classical Guitars
+              isCategory: true
+            - id: 4711258
+              key: Brand Image
+              type: PASS_ON
+              value: "https://media.justmusic.de/shop/images/hersteller/Hanika.jpg"
+            - id: 4710490
+              key: Brand
+              type: PASS_ON
+              value: HANIKA
+            - id: 4710618
+              key: Availability
+              type: PASS_ON
+              value: immediately available - delivery time 1-3 workdays
+            - id: 4710493
+              key: ArticleID
+              type: PASS_ON
+              value: "25062"
+            - id: 4710596
+              key: Short Description
+              type: PASS_ON
+              value: Classical guitar
+            - id: 4711174
+              key: Price
+              type: PASS_ON
+              value: €1699.00
+              parsedValue: 1699
+            - id: 4714637
+              key: Category
+              value: 4/4 Size Classical Guitars
+              type: FILTER
+            - id: 4710730
+              key: Cutaway
+              value: false
+              type: FILTER
+              matched: true
+            - id: 4711174
+              key: Price
+              type: FILTER
+              parsedValue: 1699
+              value: 1699.00 €
+              matched: true
+          image: //media.justmusic.de/Artikelbilder/Shopsystem/1000px_V2/9175267_1.jpg
+          name: Hanika 56 AF-N
+          images:
+            - type: ALTERNATIVE
+              url: //media.justmusic.de/Artikelbilder/Shopsystem/1000px_V2/9175267_1.jpg
+          link: //www.justmusic.de/en/Guitars-Basses/Classical-Guitars/4-4-Size-Classical-Guitars/Hanika-56-AF-N
+          head: false
+          relevance: 1000000
+      description: "A product as it is part of a search result, i.e. the product information is very restricted since the results are meant to be presented in a grid. "
+    ProductInput:
+      type: object
+      properties:
+        identifier:
+          type: string
+        groupIdentifier:
+          type: string
+        name:
+          type: string
+        productUrl:
+          type: string
+        categories:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: array
+                items:
+                  type: string
+        image:
+          type: string
+        attributes:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+              value:
+                type: string
+              userGroups:
+                type: array
+                items:
+                  type: string
+      x-examples:
+        Example 1:
+          identifier: 6379b9_C
+          groupIdentifier: "937"
+          name: Garden Kitty Planter (Small) Typ C
+          productUrl: "https://www.tenthousandvillages.com/pet-parent/6379b95b7e4577dd7216dd13ae6ba0d4"
+          categories:
+            - path:
+                - Home
+                - Garden
+                - Garden Maintainance
+          image: "https://www.tenthousandvillages.com/media/catalog/product/cache/1/small_image/100x100/9df78eab33525d08d6e5fb8d27136e95/6/6/6607890_1.jpg"
+          attributes:
+            - key: Price
+              value: "5.99"
+            - key: Price
+              value: "3.99"
+              userGroups:
+                - "23"
+            - key: Price
+              value: "7.99"
+              userGroups:
+                - "42"
+            - key: Made in
+              value: Germany
+              userGroups:
+                - "23"
+            - key: Color
+              value: green
+            - key: Description
+              value: The Garden Kitty Planter is handcrafted in Bangladesh where makers from Corr-The Jute Works showcase their skill in ceramics by crafting each white-washed terracotta planter by hand.|The perfect pot for cat nip!
+    Project:
+      type: object
+      x-examples:
+        Example 1:
+          id: 8978
+          name: some project name
+          project-group-id: 1234
+          project-group-name: some project group name
+          tags:
+            - tag1
+            - tag2
+      description: A project with a reference to the project group and all tags connected to the project
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        project-group-id:
+          type: integer
+        project-group-name:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        locale:
+          type: string
+          x-stoplight:
+            id: eakbllqduk1t5
+    ErrorResponse:
+      description: Payload for responses with HTTP Code 400
+      properties:
+        status:
+          type: string
+          example: failure
+        code:
+          type: integer
+          example: 400
+        message:
+          type: string
+          description: Provides more information why the error occured
+          example: Your query params are not valid
+  securitySchemes:
+    apiKey:
+      name: authorization
+      type: apiKey
+      in: header
+  responses: {}

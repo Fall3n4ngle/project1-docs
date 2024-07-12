@@ -1,0 +1,14 @@
+build:
+  stage: build
+  image: docker-proxy.zoovu.io/node:lts-alpine
+  rules:
+    - when: always
+  script:
+    - yarn install
+    - yarn build
+  artifacts:
+    untracked: false
+    when: on_success
+    expire_in: "7 days"
+    paths:
+      - build/

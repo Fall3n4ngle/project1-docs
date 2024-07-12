@@ -1,0 +1,40 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: Zoovu Discovery Search
+  termsOfService: 'https://zoovu.com/terms-of-use'
+  contact:
+    email: info@zoovu.com
+    url: https://zoovu.com/contact'
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  x-logo:
+    url: 'https://zoovu.com/wp-content/themes/zoovuthemev3/images/logo.svg'
+  description: And you will find us by the trail of products
+tags:
+  - name: Products
+    description: Retrieving products based on user selections in the assistant.
+servers:
+  - url: 'https://qa10.smartassistant.com/advisor-fe-web/api/v1'
+  - url: 'https://orca-api.zoovu.com/advisor-fe-web/api/v1'
+paths:
+  '/advisors/{advisorCode}/products':
+    get:
+      tags:
+        - Products
+      summary: Find products
+      description: Retrieves products for the advisor based on the answers of the consumer.
+      operationId: getProducts
+      parameters: 
+        - name: advisorCode
+          in: path
+          description: Identifier of the advisor 
+          schema: 
+            type: string
+        - name: qs
+          in: query
+          description: Concatenation of selection answer identifiers, prefixed with the question identifiers.
+          schema: 
+            type: string            
+      security: []

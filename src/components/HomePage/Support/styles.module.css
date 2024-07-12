@@ -1,0 +1,14 @@
+.support {
+  padding: 120px 0;
+  background-color: var(--ifm-footer-background-color);
+  text-align: center;
+}
+
+.support h1 {
+  margin-bottom: 40px;
+}
+
+.support p {
+  color: #f0f2f6;
+  margin-bottom: 40px;
+}

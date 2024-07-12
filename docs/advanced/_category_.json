@@ -1,0 +1,11 @@
+{
+  "label": "Advanced",
+  "position": 5,
+  "link": {
+    "type": "generated-index",
+    "description": "Advanced functionality to get the even more out of your assistants."
+  },
+  "customProps": {
+    "description": "This description can be used in the swizzled DocCard"
+  }
+}

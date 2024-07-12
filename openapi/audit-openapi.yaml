@@ -1,0 +1,247 @@
+openapi: 3.0.0
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/jonathanedwardtaylor/Audit/1.0.0
+  - description: SwaggerHub API Auto Mocking
+    url: https://orca-core.zoovu.api/Audit/1.0.0
+info:
+  description: This is a simple API definition of the audit service
+  version: "1.0.0"
+  title: Audit API
+  contact:
+    email: j.taylor@zoovu.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: Audit
+    description: Read and create audit events
+  - name: Administration
+    description: Operations available to admins only
+paths:
+  /auditItems/{accountID}:
+    get:
+      security: 
+        -  {}
+      tags:
+        - Audit
+      summary: List account events
+      operationId: searchAuditLogByAccountID
+      description: |
+        By passing in the appropriate options, you can search for
+        the audit items associated
+      parameters:
+        - in: path
+          name: accountID
+          description: pass the required string that represent the account ID (i.e. BSH or Microsoft)
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: searchString
+          description: pass an optional search string for looking up inventory
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: skip
+          description: number of records to skip for pagination
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+        - in: query
+          name: limit
+          description: maximum number of records to return
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 50
+        - in: query
+          name: includeChildAssistantEvents
+          description: flag to determine if all child assistant events should be included
+          schema:
+            type: boolean
+            default: false
+
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuditItem'
+        '400':
+          description: bad input parameter
+    post:
+      security: 
+        -  {}
+      tags:
+        - Audit
+      summary: Add event
+      operationId: addAuditItemByAccountID
+      description: Adds an item to the audit log for this specific accountID  - this is an event at the account level, not assistant level
+      parameters: 
+        - in: path
+          name: accountID
+          description: pass an optional search string for looking up inventory
+          required: true
+          schema:
+            type: string
+          
+      responses:
+        '201':
+          description: item created
+        '400':
+          description: 'invalid input, object invalid'
+        '409':
+          description: an existing item already exists
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuditItem'
+        description: Audit item to add
+
+  /auditItems/{accountID}/{assistantID}:
+      get:
+        security: 
+          -  {}
+        tags:
+          - Audit
+        summary: List resource events
+        operationId: searchAuditLogByAccountAndAssistant
+        description: |
+          By passing in the appropriate options, you can search for
+          the audit items associated
+        parameters:
+          - in: path
+            name: accountID
+            description: pass the required string that represent the impacted account ID (i.e. BSH or Microsoft)
+            required: true
+            schema:
+              type: string
+          - in: path
+            name: assistantID
+            description: pass the required string that represent the impacted assistant ID (i.e. BSH or Microsoft)
+            required: true
+            schema:
+              type: string
+          - in: query
+            name: searchString
+            description: pass an optional search string for looking up inventory
+            required: false
+            schema:
+              type: string
+          - in: query
+            name: skip
+            description: number of records to skip for pagination
+            schema:
+              type: integer
+              format: int32
+              minimum: 0
+          - in: query
+            name: limit
+            description: maximum number of records to return
+            schema:
+              type: integer
+              format: int32
+              minimum: 0
+              maximum: 50
+        responses:
+          '200':
+            description: search results matching criteria
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/AuditItem'
+          '400':
+            description: bad input parameter
+      post:
+            security: 
+              -  {}
+            tags:
+              - Audit
+            summary: Add resource event
+            operationId: addAuditItemByAccountIDAndAssistantID
+            description: Adds an item to the audit log for the specified accountID and assistantID - this is an event at the assistant level, not account level
+            parameters: 
+              - in: path
+                name: accountID
+                description: pass a required search string representing the accountID
+                required: true
+                schema:
+                  type: string
+              - in: path
+                name: assistantID
+                description: pass a required search string representing the assistantID
+                required: true
+                schema:
+                  type: string
+                
+            responses:
+              '201':
+                description: item created
+              '400':
+                description: 'invalid input, object invalid'
+              '409':
+                description: an existing item already exists
+            requestBody:
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/AuditItem'
+              description: Audit item to add
+
+components:
+  schemas:
+    AuditItem:
+      type: object
+      required:
+        - id
+        - eventName
+        - status
+        - timestamp
+        - environment
+        - initiatingActor
+        - accountID
+     
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        eventName:
+          type: string
+          example: 'PublishAssistant'
+        status:
+          type: string
+          example: 'Success'
+        timestampe:
+          type: string
+          format: date
+          description: timestamp that event took place
+          example: '2022-08-09T14:15:01Z'
+        environment:
+          type: string
+          example: 'orca'
+        initiatingActor:
+          type: string
+          example: 'j.taylor@zoovu.com'
+        targetActor:
+          type: string
+          example: 'Assistant:324235'
+        accountID:
+          type: string
+          example: '325235'
+        assistantID:
+          type: string
+          example: '3242342'
+        moreDetails:
+          type: string
+          example: 'assistant successfully published'

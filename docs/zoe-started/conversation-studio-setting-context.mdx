@@ -1,0 +1,39 @@
+---
+sidebar_position: 3
+description: Integration ...
+---
+
+# Conversation Studio - Setting up Context
+
+<div class="body-bigger">
+  Zoe relies on **Context** to generate personalized product descriptions and to
+  create a unique tone of voice for each of them.
+</div>
+
+<div class="body-bigger margin-bottom--lg">
+  Context is a low-code functionality of the Zoovu platform. It's essential in
+  explaining why the recommended product is a good match for the customer based
+  on the information gather during their interactions with a Zoovu assistant.
+</div>
+
+Step 1: Create **context variables** for each attribute you would like to highlight in the product description (see Screenshot 5 below). They can include categories like usage (to indicate usage preferences such as 'extreme' or 'professional').
+
+<div class="alert alert--primary margin-vert--lg" role="alert">
+**There are two types of context attributes in Zoe: Text and Boolean.**
+
+For categories such as usage, choose a Text attribute and assign values like "daily" or "professional."
+
+For binary choices, use a Boolean attribute, such as **_isProfessional_**. Both **_isProfessional=true_** and **_usage=professional_** are valid.
+While using text makes your schema more concise, it can be prone to errors since you do not see all potential values at once.
+
+</div>
+
+<div className="body-smaller margin-vert--lg">
+  **Screenshot 5**: Context attribute settings. To access this view, go to the
+  'Context' section in the left menu bar of Conversation Studio and click the
+  pen icon next to an item.
+</div>
+
+Step 2: Assign **context action** to selected questions in the flow (see Screenshot 6 below). Make sure to click both 'Save' in the modal window and 'Apply' in the sidebar.
+
+Step 3: After creating a Zoe configuration, make sure to add your context attribute triggers to the Instructions and Tone of Voice in Zoe's design panel (see **4.2. Compose Panel: Instructions** in this document).

@@ -1,0 +1,62 @@
+prepare-env-prod:
+  stage: prepare
+  image: harbor.zoovu.io/devops/devops-image
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^release\/.+$/
+      when: on_success
+    - when: never
+  environment:
+    docs-prod
+  dependencies: []
+  needs: []
+  before_script:
+    - az login --service-principal -u ${AAD_SERVICE_PRINCIPAL_CLIENT_ID} -p ${AAD_SERVICE_PRINCIPAL_CLIENT_SECRET} --tenant ${TENANT_ID} --output none
+    - az account set --subscription ${SUBSCRIPTION_ID}
+    - az aks get-credentials --resource-group ${RESOURCE_GROUP} --name ${CLUSTER_NAME}
+    - kubelogin convert-kubeconfig -l spn
+  script:
+    - >
+      sed -i
+      -e "s/HTPASSWD/$(echo "${BASIC_AUTH_USER}:$(openssl passwd -apr1 ${BASIC_AUTH_PASSWORD})" | base64 -w0)/g"
+      .gitlab-ci/basic-auth-secret.yaml
+    - >
+      sed -i
+      -e "s/STATIC_SITE_PVC_NAME/${STATIC_SITE_PVC_NAME}/g"
+      .gitlab-ci/nginx-prod.yaml
+    - >
+      kubectl apply
+      -n ${K8S_NAMESPACE_NAME}
+      -f .gitlab-ci/basic-auth-secret.yaml
+    - >
+      helm upgrade partner-docs
+      oci://registry-1.docker.io/bitnamicharts/nginx
+      --namespace ${K8S_NAMESPACE_NAME}
+      --values .gitlab-ci/nginx-prod.yaml
+      --version 14.2.1
+      --wait
+      --timeout 30m
+      --atomic
+      --install
+
+deploy-prod:
+  stage: deploy
+  image: harbor.zoovu.io/devops/devops-image
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^release\/.+$/
+      when: on_success
+    - when: never
+  environment:
+    docs-prod
+  dependencies:
+    - build
+    - prepare-env-prod
+  needs:
+    - build
+    - prepare-env-prod
+  script:
+    - >
+      azcopy sync
+      build/
+      "${AZURE_STORAGE_CONTAINER_WITH_SAS}"
+      --recursive=true
+      --delete-destination=true

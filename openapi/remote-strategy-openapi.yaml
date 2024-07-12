@@ -1,0 +1,189 @@
+openapi: 3.0.0
+servers:
+  - description: Local server for testing
+    url: http://localhost:3000
+info:
+  description: |
+    ## Goal
+
+    `Remote Strategies` are extension points for Optimizations.
+    
+    This API specification is the contract that must be implemented to successfully extend the Optimization pipeline with (your) custom logic.
+  version: "1.0.0"
+  title: Remote Strategy API
+  contact:
+    email: help@zoovu.com
+  license:
+    name: Private
+    url: "https://zoovu.com"
+paths:
+  /:
+    post:
+      security:
+        - {}
+      summary: Transform search result
+      operationId: transform
+      description: |
+        Implementation of a search result transformation. This can be anything a customer needs. Reordering and removing items based on
+        customer specific logic. Extending results with information from their backend systems.
+
+        Anything is fine as long as the returned searchresult follows our structure.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StrategyRequest"
+        description: Contains result, configuration and contextual data
+
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SearchResult"
+        "400":
+          description: bad input parameter
+
+components:
+  schemas:
+    ProductProperty:
+      type: object
+      description: Represents a single attribute of a product.
+      required:
+        - property
+        - propertyType
+        - value
+      properties:
+        property:
+          type: string
+        propertyType:
+          type: string
+        value:
+          type: object
+        infoText?:
+          type: string
+        propertyTranslation:
+          type: string
+        valueTranslation:
+          type: string
+        unit:
+          type: string
+    ProductRecommendation:
+      type: object
+      description: |
+        A product recommendation represents a product and contains the attributes of that product relevant for the
+        current assistant. It has the information to show what attributes fit the user's request.
+      properties:
+        name:
+          $ref: "#/components/schemas/ProductProperty"
+        price:
+          $ref: "#/components/schemas/ProductProperty"
+        offerUrl:
+          $ref: "#/components/schemas/ProductProperty"
+        picture:
+          $ref: "#/components/schemas/ProductProperty"
+        sku:
+          $ref: "#/components/schemas/ProductProperty"
+        identifier:
+          type: number
+        collectionId:
+          type: number
+        checksum:
+          type: number
+        productId:
+          type: number
+        productImageAssetUrl:
+          type: string
+        positiveProperties:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProductProperty"
+        negativeProperties:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProductProperty"
+        neutralProperties:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProductProperty"
+        additionalProperties:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/ProductProperty"
+    ProductCluster:
+      description: |
+        A product cluster is a group of products. A cluster can have products that fully match the request or partially.
+        The type of products is indicated with the clusterNumber property.
+      type: object
+      required:
+        - clusterNumber
+        - productInstances
+      properties:
+        clusterNumber:
+          type: number
+          description: |
+            Indicates what type of *matches*  this cluster contains.
+            If the **clusterNumber** is 0, then the cluster contains perfect matches. If the **clusterNumber** is 1, then it contains alternatives.
+            2 indicates that the cluster has been created with custom logic. Use this to your advantage in the strategy.
+        productInstances:
+          type: array
+          description: List of product recommendations.
+          items:
+            $ref: "#/components/schemas/ProductRecommendation"
+    SearchResult:
+      type: object
+      required:
+        - maxPages
+        - numberOfProducts
+        - productClusters
+      properties:
+        maxPages:
+          type: number
+          description: Number of result pages for the given page size
+          example: 3
+        numberOfProducts:
+          type: number
+          description: Number of products in the result set.
+          example: 125
+        searchState:
+          type: object
+          description: Contains search related information.
+          properties:
+            requestedPageNumber:
+              type: number
+              description: Indicates the current page of results.
+        productClusters:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProductCluster"
+        progressiveFilterResult:
+          type: object
+          description: Internal object used by the assistants. **Do not touch!**
+        debugInfo:
+          type: object
+          description: Free-form object that can be used to attach debug information.
+    StrategyRequest:
+      type: object
+      required:
+        - searchResult
+      properties:
+        searchResult:
+          $ref: "#/components/schemas/SearchResult"
+          description: The
+        configuration:
+          type: object
+          description: A free-form structure that can contain the necessary information to apply the right transformation.
+          example:
+            endpoint: https://advisorstudio.demo/transform
+            curved: [1, 4, 6, 9]
+            sharp: [5, 3, 0, 1]
+
+        context:
+          type: object
+          description: A free-form structure that contains runtime information gathered while using the assistant.
+          example:
+            userType: professional
+            firstVisit: false

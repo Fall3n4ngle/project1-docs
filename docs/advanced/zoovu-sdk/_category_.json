@@ -1,0 +1,11 @@
+{
+  "label": "Zoovu SDK",
+  "position": 9,
+  "link": {
+    "type": "generated-index",
+    "description": "(Work in progress) JavaScript SDK to interact with Zoovu Assistants and more"
+  },
+  "customProps": {
+    "description": ""
+  }
+}

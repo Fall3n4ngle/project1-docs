@@ -1,0 +1,9 @@
+stages:
+  - build
+  - prepare
+  - deploy
+
+include:
+  - local: $CI_PROJECT_DIR/.gitlab-ci/build.gitlab-ci.yml
+  - local: $CI_PROJECT_DIR/.gitlab-ci/deploy-dev.gitlab-ci.yml
+  - local: $CI_PROJECT_DIR/.gitlab-ci/deploy-prod.gitlab-ci.yml

@@ -1,0 +1,19 @@
+.feature {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-bottom: 30px;
+  padding-right: 20px;
+}
+
+.feature * {
+  margin-bottom: 0;
+}
+
+.feature a {
+  color: #CC003A;
+}
+
+.feature p {
+  flex-grow: 1;
+}

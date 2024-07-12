@@ -1,0 +1,23 @@
+.guide {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+.guide div {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #f0f2f6;
+  margin-bottom: 32px;
+}
+
+.guide h5 {
+  margin-bottom: 16px;
+}
+
+.guide p {
+  margin-bottom: 0;
+}

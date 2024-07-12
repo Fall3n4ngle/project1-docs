@@ -1,0 +1,26 @@
+---
+sidebar_position: 4
+description: Integration ...
+---
+
+# Advisor Studio - Creating a Zoe configuration
+
+You can create a new Zoe configuration in **Advisor Studio**.
+
+Once the feature is activated for your Zoovu account, you will find the 'Zoe' panel in the left menu bar of Advisor Studio.
+
+Click the '+Create Zoe' button to get started (see Screenshot 7 below). You will then be able to access the Compose Panel containing all the configuration settings.
+
+<p class="margin-vert--lg">[Internal](/): Go to the Admin tool and switch on the feature flags for 'Zoovu Ontology Expert' and 'Advisor Studio'.</p>
+
+<p class="body-smaller ">**Screenshot 7:** Zoe overview in Advisor Studio.In top right corner you can see the 'Create Zoe'button.</p>
+
+<div class="alert alert--primary margin-vert--lg" role="alert">
+For detailed information on creating personalized product descriptions with Zoe, go to **4. Working with Zoe**.
+</div>
+
+You can link your Zoe instance to your assistant using an API key, which can be found in the Zoe compose panel. Copy the key and paste it into a dedicated section in your assistant's settings, then click 'Apply' (see Screenshots 8 and 9 below).
+
+<p class="body-smaller margin-vert--lg">**Screenshot 8:** Copying the API Key from Zoe's panel. To access this view, go tothe Advisor Studio and open your Zoe instance.</p>
+
+**Screenshot 9:** Pasting the Zoe API Key into assistant settings. To access this view, navigate to your assistantin Conversation Studio, click the Settings icon in the left-hand panel, and find 'Zoovu ontology expert' on the list.
