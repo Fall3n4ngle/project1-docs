@@ -14,11 +14,11 @@ Integration of a Zoovu Assistant on your page is typically being done with the j
 ```
 </p>
 
-<div style={{ marginBottom: "4rem" }}>
+<CustomParagraph style={{ marginBottom: "4rem" }}>
     You can add different kinds of parameters to this endpoint to influence the behavior of the assistant. These parameters are added at the end of the js-loader endpoint, just like locale. Those parameters are split with a &.
 e.g.:
 https://orca-api.zoovu.com/advisor-fe-web/api/v1/advisors/w80Lthm/js-loader?locale=en-IE&disableSessionPersistence=true
-</div>
+</CustomParagraph>
 
 {/* ## disableSessionPersistence=true
 <p className="body-bigger">The session is not being stored.</p>
@@ -30,23 +30,23 @@ Implications:
 
 ## disableStoringSessionId=true
 
-<p className="body-bigger margin-bottom--md">
-{"the session id is not stored as a cookie, but the session is still send to redis."}
-</p>
+<CustomParagraph className="body-bigger margin-bottom--md">
+the session id is not stored as a cookie, but the session is still send to redis.
+</CustomParagraph>
 
 Implications:
 - [x] This means we CAN use leadgen, but on revisit or coming back from a PDP page, it is a new session.
 
 <p style={{ marginBottom: "4rem" }}/>
 ## disableTracking=true
-<p style={{ marginBottom: "4rem" }}>
-    {`
-        Tracking will be disabled for this Zoovu Assistant. This is not advisable as you will not have reporting data.
-    `}
-</p>
+<CustomParagraph style={{ marginBottom: "4rem" }}>
+    Tracking will be disabled for this Zoovu Assistant. This is not advisable as you will not have reporting data.
+</CustomParagraph>
 
 ## disableFirstPaint=true
 Disables first paint, even if you have this feature flag enabled.
+
+
 
 
 

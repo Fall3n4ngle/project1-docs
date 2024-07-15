@@ -286,7 +286,6 @@ h5 {
 
 /* Media query for mobile */
 
-
 /* Menu */
 
 .menu__link {
@@ -296,6 +295,10 @@ h5 {
 .menu__link--active {
   font-family: campton-medium;
   font-weight: 500;
+}
+
+.menu {
+  padding: 24px 0 24px 8px!important;
 }
 
 /* Menu */
@@ -324,11 +327,32 @@ h5 {
 
 .navbar {
   height: 80px;
+  padding: 0 24px;
 }
 
 .navbar__item {
-  padding-left: 15px;
-  padding-right: 15px;
+  padding: 0 12px;
+}
+
+.navbar__logo img {
+  width: 97px;
+  height: 18.55px;
+  margin-right: 0!important;
+}
+
+.navbar__brand {
+  margin-right: 22px;
+}
+
+.navbar__logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0;
+}
+
+.navbar__brand {
+  display: inline-block;
 }
 
 /* Navbar */
@@ -419,11 +443,11 @@ h5 {
 .pagination-nav__sublabel {
   margin-bottom: 8px;
   font-weight: 400;
-  color: #00143D;
+  color: #00143d;
 }
 
 .pagination-nav {
-  margin-top: 68px!important;
+  margin-top: 68px !important;
 }
 
 /* Pagination */
@@ -431,4 +455,3 @@ h5 {
 .theme-doc-toc-desktop {
   display: none;
 }
-
