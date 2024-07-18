@@ -6,11 +6,11 @@ import styles from "./styles.module.css";
 
 const Guide = ({ subtitle, title }: Omit<TGuide, "id">) => {
   return (
-    <div className={styles.guide}>
+    <article className={styles.guide}>
       <div />
       <h5>{title}</h5>
       <p className="body-default">{subtitle}</p>
-    </div>
+    </article>
   );
 };
 

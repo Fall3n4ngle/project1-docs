@@ -1,17 +1,17 @@
-import React from 'react';
+import React from "react";
 import {
   PageMetadata,
   useCurrentSidebarCategory,
-} from '@docusaurus/theme-common';
-import useBaseUrl from '@docusaurus/useBaseUrl';
-import DocCardList from '@theme/DocCardList';
-import DocVersionBanner from '@theme/DocVersionBanner';
-import DocVersionBadge from '@theme/DocVersionBadge';
-import DocBreadcrumbs from '@theme/DocBreadcrumbs';
-import Heading from '@theme/Heading';
-import type {Props} from '@theme/DocCategoryGeneratedIndexPage';
+} from "@docusaurus/theme-common";
+import useBaseUrl from "@docusaurus/useBaseUrl";
+import DocCardList from "@theme/DocCardList";
+import DocVersionBanner from "@theme/DocVersionBanner";
+import DocVersionBadge from "@theme/DocVersionBadge";
+import DocBreadcrumbs from "@theme/DocBreadcrumbs";
+import Heading from "@theme/Heading";
+import type { Props } from "@theme/DocCategoryGeneratedIndexPage";
 
-import styles from './styles.module.css';
+import styles from "./styles.module.css";
 
 function DocCategoryGeneratedIndexPageMetadata({
   categoryGeneratedIndex,
@@ -41,7 +41,7 @@ function DocCategoryGeneratedIndexPageContent({
           {categoryGeneratedIndex.title}
         </Heading>
         {categoryGeneratedIndex.description && (
-          <p>{categoryGeneratedIndex.description}</p>
+          <p className="body-default">{categoryGeneratedIndex.description}</p>
         )}
       </header>
       <article className="margin-top--lg">
@@ -52,7 +52,7 @@ function DocCategoryGeneratedIndexPageContent({
 }
 
 export default function DocCategoryGeneratedIndexPage(
-  props: Props,
+  props: Props
 ): JSX.Element {
   return (
     <>

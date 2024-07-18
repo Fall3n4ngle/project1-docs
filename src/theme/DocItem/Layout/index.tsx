@@ -45,7 +45,7 @@ export default function DocItemLayout({children}: Props): JSX.Element {
     metadata: {unlisted},
   } = useDoc();
   return (
-    <div className="row">
+    <div className={clsx('row', styles.docItemRow)}>
       <div className={clsx('col', !docTOC.hidden && styles.docItemCol)}>
         {unlisted && <Unlisted />}
         <DocVersionBanner />

@@ -10,7 +10,7 @@
 }
 
 .cardContainer:hover {
-  border-color: var(--ifm-color-primary);
+  border-color: #277DFF;
   box-shadow: 0 3px 6px 0 rgb(0 0 0 / 20%);
 }
 
