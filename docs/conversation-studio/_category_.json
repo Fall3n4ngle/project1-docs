@@ -1,6 +1,9 @@
 {
   "label": "Conversation Studio",
   "position": 3,
+  "customProps": {
+    "subLabel": "Introduction"
+  },
   "link": {
     "type": "generated-index",
     "description": "Build effective omnichannel conversations at scale with a Human Touch."

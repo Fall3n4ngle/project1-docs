@@ -31,6 +31,8 @@ function DocCategoryGeneratedIndexPageContent({
   categoryGeneratedIndex,
 }: Props): JSX.Element {
   const category = useCurrentSidebarCategory();
+  const subLabel = category?.customProps?.subLabel as string | undefined;
+
   return (
     <div className={styles.generatedIndexPage}>
       <DocVersionBanner />
@@ -40,6 +42,11 @@ function DocCategoryGeneratedIndexPageContent({
         <Heading as="h1" className={styles.title}>
           {categoryGeneratedIndex.title}
         </Heading>
+        {subLabel && (
+          <Heading as="h2" className={styles.subTitle}>
+            {subLabel}
+          </Heading>
+        )}
         {categoryGeneratedIndex.description && (
           <p className="body-default">{categoryGeneratedIndex.description}</p>
         )}
