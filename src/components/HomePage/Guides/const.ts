@@ -8,26 +8,31 @@ export const guides: Guide[] = [
   {
     id: 1,
     title: "Data Platform",
-    subtitle: "Enriched product data",
+    subtitle:
+      "Clean and enrich your product data for exceptional product discovery experiences",
   },
   {
     id: 2,
     title: "Conversation Studio",
-    subtitle: "Digital Assistants",
+    subtitle:
+      "Create and manage digital assistants to guide customers to the perfect products",
   },
   {
     id: 3,
     title: "Configuration Studio",
-    subtitle: "Configuration Studio",
+    subtitle:
+      "Create and manage visual configurators to configure and bundle products easily",
   },
   {
     id: 4,
     title: "Search Studio",
-    subtitle: "Intelligent search",
+    subtitle:
+      "Create and manage intelligent search experiences to deliver more accurate and relevant search results",
   },
   {
     id: 5,
     title: "Advisor Studio",
-    subtitle: "Zoe Advisor",
+    subtitle:
+      "Build Zoe, your GenAI shopping advisor, to assist your customers in making confident purchases",
   },
 ];

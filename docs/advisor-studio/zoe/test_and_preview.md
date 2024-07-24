@@ -21,9 +21,7 @@ To start generating previews you need:
 
 **Step 3**: Click "Generate" on the right-hand side of the panel.
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-    ![Zoe preview](./img/zoe_preview.png)
-</BrowserWindow>
+![Zoe preview](./img/zoe_preview.png)
 
 ## Zoe preview
 
@@ -33,9 +31,7 @@ To see the latest version of your Zoe Advisor in action, make sure to click "Pub
 - Choose any combination of Instructions and Tone of voice.
 - Click "Generate".
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-    ![Zoe preview](./img/zoe_preview_test.png)
-</BrowserWindow>
+![Zoe preview](./img/zoe_preview_test.png)
 
 You can interact and ask questions to test how your Zoe responds.
 
@@ -54,15 +50,11 @@ Zoe supports multiple languages.
 - Select multiple locales from the dropdown menu (each locale consists of a language and a country).
 - Click "Save".
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-    ![Edit locale in preview](./img/edit_locale.png)
-</BrowserWindow>
+![Edit locale in preview](./img/edit_locale.png)
 
 As soon as you save the Products settings, you will be able to select the added languages in the Preview:
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-    ![Multiple languages in preview](./img/multi_lang.png)
-</BrowserWindow>
+![Multiple languages in preview](./img/multi_lang.png)
 
 Zoe should be able to find the SKUs recommended by the assistant in the Data Project that has been configured for this locale. The locale used by the assistant must be available in the Zoe configuration. Otherwise, Zoe will not respond.
 

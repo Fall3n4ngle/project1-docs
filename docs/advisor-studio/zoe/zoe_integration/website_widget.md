@@ -13,20 +13,12 @@ Zoe can be implemented for generating product descriptions using a custom elemen
 - Go to Advisor Studio > Zoe Advisors.
 - Select and edit a Zoe Advisor:
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-
 ![Select and edit a Zoe Advisor](../img/select_zoe_advisor.png)
-
-</BrowserWindow>
 
 - Navigate to **Advisor Studio > Zoe Advisors > Integration**.
 - Select "Website widget":
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-
 ![Zoe integration: Website widget](../img/integration_widget.png)
-
-</BrowserWindow>
 
 
 ## Embedding

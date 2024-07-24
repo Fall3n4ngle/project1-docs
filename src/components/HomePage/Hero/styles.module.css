@@ -8,13 +8,8 @@
 }
 
 .hero h2 {
-  line-height: 0.8;
-  margin-bottom: 40px;
-}
-
-.hero p {
   line-height: 1;
-  margin-bottom: 52px;
+  margin-bottom: 42px;
 }
 
 .hero__search {

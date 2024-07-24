@@ -44,9 +44,7 @@ For this, make sure that the Digital Assistant is linked to the corresponding Da
 
 Go to **Conversation Studio > Catalog** and link the assistant to your Data Project, selecting it from the dropdown menu.
 
-<BrowserWindow url="https://orca.zoovu.com">
-    ![Link a Digital Assistant to a Data Project](./img/cs_link_catalog.png)
-</BrowserWindow>
+![Link a Digital Assistant to a Data Project](./img/cs_link_catalog.png)
 
 If you are creating a new Digital Assistant for your Zoe project:
 

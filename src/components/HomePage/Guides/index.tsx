@@ -10,7 +10,7 @@ const Guides = () => {
       <div className="container">
         <h2>Browse through our guides</h2>
         <p className="body-bigger">
-          Explore all help articles for progressing with studios.
+          Explore help articles for your specific requirements
         </p>
         <div className={styles.guides__list}>
           {guides.map(({ id, ...guide }) => (

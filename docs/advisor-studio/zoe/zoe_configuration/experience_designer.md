@@ -13,9 +13,7 @@ You can style and preview your Zoe after embedding it into the Results Page of y
 - In **Conversation Studio**, go to the Design tab in the left menu. 
 - Assign a theme and then click the “Go to Experience Designer” button on the top of the page.
 
-<BrowserWindow url="https://orca.zoovu.com">
-    ![Experience Designer](../img/zoe_exd.png)
-</BrowserWindow>
+![Experience Designer](../img/zoe_exd.png)
 
 - In **Experience Designer**, select the ‘Results page’ from the page selector above your canvas.
 
@@ -23,9 +21,7 @@ You can style and preview your Zoe after embedding it into the Results Page of y
 
 - Enable the ‘Zoovu Ontology Expert’ toggle in the Top Products Settings. (If you can’t see this toggle, please contact the Support.)
 
-<BrowserWindow url="https://orca-experience.zoovu.com">
-    ![Experience Designer](../img/zoe_exd_top_product.png)
-</BrowserWindow>
+![Experience Designer](../img/zoe_exd_top_product.png)
 
 - Add custom styles.
 
@@ -35,9 +31,7 @@ Right on the top of the settings, you will see two toggles:
 
 In the same menu, you can style the background, margin and padding. You can also add a border and shadow to the element.
 
-<BrowserWindow url="https://orca-experience.zoovu.com">
-    ![Zoe component settings](../img/zoe_exd_settings.png)
-</BrowserWindow>
+![Zoe component settings](../img/zoe_exd_settings.png)
 
 Scroll down to see additional settings for the Zoe component:
 - Heading (compose the text displayed in the Personalized Heading component)

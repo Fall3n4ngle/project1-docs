@@ -18,9 +18,7 @@ The Schema is a formal description of the Context Attributes. This description c
 
 To access Context Schema, go to Conversation Studio > select an assistant > click **Context** on the left-hand menu.
 
-<BrowserWindow url="https://orca.zoovu.com/">
 ![Context schema](./img/create_context_attribute.png)
-</BrowserWindow>
 
 ### Zoovu schema
 

@@ -13,16 +13,12 @@ import BrowserWindow from "@site/src/components/BrowserWindow";
 - Go to **Advisor Studio > Zoe Advisors**. 
 - Click the "+ Create advisor" button to create a new Zoe project.
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-    ![Zoe Advisor](../img/zoe_advisor.png)
-</BrowserWindow>
+![Zoe Advisor](../img/zoe_advisor.png)
 
 - Assign a unique name to your Zoe and connect it to a Data Project. 
 - For integration within a Digital Assistant, make sure to select the correct Data Project and locale.
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
     ![Create new Zoe](../img/create_new_zoe_advisor.png)
-</BrowserWindow>
 
 
 :::info
@@ -36,15 +32,11 @@ Zoe Advisor projects are locale-specific. This means that you can only connect e
 
 To edit or configure Zoe, go to Advisor Studio > Zoe Advisors and click the pencil icon next to your Zoe Advisor:
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-    ![Edit Zoe](../img/edit_zoe.png)
-</BrowserWindow>
+![Edit Zoe](../img/edit_zoe.png)
 
 In the setup panel, you are able to define the configuration settings and preview the results:
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-    ![Zoe Editor](../img/zoe_editor.png)
-</BrowserWindow>
+![Zoe Editor](../img/zoe_editor.png)
 
 
 ### Configure "Products"
@@ -75,9 +67,7 @@ This can include:
 
 Through the use of matching keys, you can specify and describe multiple customer contexts that Zoe can consider.
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-    ![Instructions](../img/instructions.png)
-</BrowserWindow>
+![Instructions](../img/instructions.png)
 
 :::note
 Learn more about [**Context**](../../../advanced/context/assistant_setup.md).
@@ -118,9 +108,7 @@ Avoid phrases like:
 
 Tone of voice defines the style of the generated product description. It instructs Zoe’s LLMs on how to articulate its responses.
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-    ![Tone of voice](../img/tone_of_voice.png)
-</BrowserWindow>
+![Tone of voice](../img/tone_of_voice.png)
 
 Tone of Voice requires two distinct values: 
 
@@ -152,9 +140,7 @@ This is especially useful for frequently asked questions about:
 - Opening hours
 - General support
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-    ![Support topics](../img/support_topics.png)
-</BrowserWindow>
+![Support topics](../img/support_topics.png)
 
 :::warning
 
@@ -174,17 +160,13 @@ Examples:
 - Comparisons, suggestions or other product questions from same category: `https://mywebsite/shop/laptops`
 - Unrelated queries: `https://mywebsite/shop`
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-    ![Fallback topics](../img/fallback_topics.png)
-</BrowserWindow>
+![Fallback topics](../img/fallback_topics.png)
 
 ### Configure "Company information"
 
 Here, you can provide Zoe with information about your company, such as your boilerplate or company description and purpose, to help Zoe generate responses as a representative of your company.
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-    ![Company information](../img/company_info.png)
-</BrowserWindow>
+![Company information](../img/company_info.png)
 
 For example, you can name your main competitors to prevent Zoe from directing users to their shops.
 

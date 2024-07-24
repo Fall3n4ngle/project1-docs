@@ -13,22 +13,14 @@ The "Integration" tab in **Advisor Studio > Zoe Advisors** becomes available aft
 - Go to Advisor Studio > Zoe Advisors.
 - Select and edit a Zoe Advisor:
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-
 ![Select and edit a Zoe Advisor](../img/select_zoe_advisor.png)
-
-</BrowserWindow>
 
 - Navigate to **Advisor Studio > Zoe Advisors > Integration**.
 - Select "Assistant component".
 - Click the "Link an assistant" button.
 - Select the Digital Assistant to which you want to link Zoe.
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-
 ![Zoe integration: Digital Assistant](../img/integration_assistant.png)
-
-</BrowserWindow>
 
 :::info
 

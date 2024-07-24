@@ -16,12 +16,8 @@ When enabled, Zoe chat will be able to answer your customers' product-related qu
 - View "Top Product" settings in the right-hand menu.
 - Navigate to the "Zoovu Ontology Expert" settings.
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-    ![Experience Designer - Zoe settings](../img/zoe_exd_top_product.png)
-</BrowserWindow>
+![Experience Designer - Zoe settings](../img/zoe_exd_top_product.png)
 
 - Switch on the "Use chat" toggle.
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-    ![Enable Zoe chat](../img/zoe_enable_chat.png)
-</BrowserWindow>
+![Enable Zoe chat](../img/zoe_enable_chat.png)

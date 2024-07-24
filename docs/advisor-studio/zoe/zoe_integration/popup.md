@@ -18,11 +18,7 @@ You can add a button to your Product Detail Page that triggers a popup with Zoe 
 - Select "Website widget".
 - Set "display" to "Pop-up":
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-
 ![Default popup](../img/display_popup.png)
-
-</BrowserWindow>
 
 The default popup code renders an "Ask about this product" button, which triggers a centered dialog with a backdrop.
 
@@ -31,11 +27,7 @@ See the 3 examples below for more ideas on how to style the popup on your page.
 
 **Example 1**: Render a fixed button that triggers a right-bottom fixed dialog without a backdrop:
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-
 ![Fixed button](../img/zoe_popup1.png)
-
-</BrowserWindow>
 
 ```css
 zoovu-zoe { 

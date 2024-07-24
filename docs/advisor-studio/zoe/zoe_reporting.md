@@ -43,9 +43,7 @@ Use reporting filters to narrow down your analytics view based on specific param
 
 This section displays key metrics like Impressions, Engagement Rate, Conversion Rate, Click-through Rate (CTR), Referred Revenue, and Generated Revenue. These metrics can help you assess the immediate impact of your content, understand how effectively your Zoe Assistants engage users, and measure the revenue.
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-    ![Basic metric cards](./img/basic_metric_cards.png)
-</BrowserWindow>
+![Basic metric cards](./img/basic_metric_cards.png)
 
 :::info
 
@@ -59,17 +57,13 @@ This section displays key metrics like Impressions, Engagement Rate, Conversion 
 
 The Traffic & Engagement Table helps you visualize trends, assess the effectiveness of specific campaigns, and understand fluctuations in user engagement and purchasing behavior.
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-    ![Traffic and engagement table](./img/traffic_engagement_table.png)
-</BrowserWindow>
+![Traffic and engagement table](./img/traffic_engagement_table.png)
 
 ## Feedback Graph
 
 Feedback Graph shows the ratio of positive to negative feedback (thumbs up vs thumbs down) given by the customers.
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-    ![Feedback graph](./img/feedback_graph.png)
-</BrowserWindow>
+![Feedback graph](./img/feedback_graph.png)
 
 ## Product Insights Table
 
@@ -77,14 +71,10 @@ The Product Insights Table displays detailed analytics on a per-product basis, i
 
 This section is particularly useful for identifying high-performing products and optimizing your marketing strategies.
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-    ![Product Insights Table](./img/product_insights_table.png)
-</BrowserWindow>
+![Product Insights Table](./img/product_insights_table.png)
 
 ## Chat History
 
 Chat History logs detailed interactions within Zoe Advisor sessions, showing you what products were discussed, the feedback given, and how long users engaged.
 
-<BrowserWindow url="https://orca-advisor.zoovu.com">
-    ![Chat History](./img/chat_history.png)
-</BrowserWindow>
+![Chat History](./img/chat_history.png)
