@@ -6,6 +6,9 @@ The intended audience of this documentation is both our own delivery teams, (tec
 
 The documentation should contain the information we use ourselves to get the most of our platform. This includes information on the APIs, CSS architecture of our assistants, SDK documentation of our libraries used in the browser.
 
+## List of changes applied
+[CHANGES.md](CHANGES.md)
+
 ## Contributing
 
 > **Recording available**
