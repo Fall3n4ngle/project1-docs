@@ -1,3 +1,6 @@
+## List of changes applied
+[CHANGES.md](CHANGES.md)
+
 # Knowledge Base
 
 This documentation project is the source for our Knowledge Base available on https://docs.zoovu.com.
@@ -5,9 +8,6 @@ This documentation project is the source for our Knowledge Base available on htt
 The intended audience of this documentation is both our own delivery teams, (technical) partners and customers that will build experiences on our platforms. Their profile is similar to our custom dev and solutions people.
 
 The documentation should contain the information we use ourselves to get the most of our platform. This includes information on the APIs, CSS architecture of our assistants, SDK documentation of our libraries used in the browser.
-
-## List of changes applied
-[CHANGES.md](CHANGES.md)
 
 ## Contributing
 
